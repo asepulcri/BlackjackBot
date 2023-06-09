@@ -4,47 +4,31 @@
 #ifndef BLACKJACKBOT_SHOEGENERATOR_H
 #define BLACKJACKBOT_SHOEGENERATOR_H
 
-#include <iostream>
+#include "card.h"
+#include <vector>
+#include <algorithm>
+#include <random>
 
 namespace shoe {
-    enum Suit {
-        clubs = 0,
-        diamonds = 1,
-        hearts = 2,
-        spades = 3
-    };
-
-    enum Rank {
-        ace = 0,
-        jack = 10,
-        queen = 11,
-        king = 12
-    };
-
-    class card {
-    private:
-        Suit m_suit;
-        Rank m_rank;
-
-    public:
-        card(Suit cardSuit, Rank cardRank): m_suit(cardSuit), m_rank(cardRank) {}
-
-        Suit getSuit() const {
-            return m_suit;
-        }
-
-        Rank getRank() const {
-            return m_rank;
-        }
-    };
-
     class shoe {
     private:
         int m_size;
+        std::vector<card::card> currentShoe;
 
     public:
-        shoe(int shoeSize): m_size(shoeSize) {}
+        shoe(int shoeSize): m_size(shoeSize) {
+            for(int i = 1; i <= shoeSize; i++) {
+                for(int j = 0; j < 52; j++) {
+                    currentShoe.emplace_back(card::Suit(j / 13), card::Rank((j % 13) + 1));
+                }
+            }
+        }
 
+        void shuffleShoe() {
+            std::random_device rd;
+            std::mt19937 generator(rd());
+            std::shuffle(currentShoe.begin(), currentShoe.end(), generator);
+        }
     };
 }
 
