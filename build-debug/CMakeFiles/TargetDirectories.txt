@@ -1,0 +1,3 @@
+C:/Users/Andrea/CLionProjects/BlackjackBot/build-debug/CMakeFiles/BlackjackBot.dir
+C:/Users/Andrea/CLionProjects/BlackjackBot/build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Andrea/CLionProjects/BlackjackBot/build-debug/CMakeFiles/rebuild_cache.dir
