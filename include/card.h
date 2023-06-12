@@ -1,12 +1,11 @@
 //
-// Created by Andrea on 08/06/2023.
+// Created by Andrea on 09/06/2023.
 //
-#ifndef BLACKJACKBOT_SHOEGENERATOR_H
-#define BLACKJACKBOT_SHOEGENERATOR_H
 
-#include <iostream>
+#ifndef BLACKJACKBOT_CARD_H
+#define BLACKJACKBOT_CARD_H
 
-namespace shoe {
+namespace card {
     enum Suit {
         clubs = 0,
         diamonds = 1,
@@ -15,10 +14,19 @@ namespace shoe {
     };
 
     enum Rank {
-        ace = 0,
-        jack = 10,
-        queen = 11,
-        king = 12
+        ace = 1,
+        two,
+        three,
+        four,
+        five,
+        six,
+        seven,
+        eight,
+        nine,
+        ten,
+        jack,
+        queen,
+        king
     };
 
     class card {
@@ -37,15 +45,6 @@ namespace shoe {
             return m_rank;
         }
     };
-
-    class shoe {
-    private:
-        int m_size;
-
-    public:
-        shoe(int shoeSize): m_size(shoeSize) {}
-
-    };
 }
 
-#endif //BLACKJACKBOT_SHOEGENERATOR_H
+#endif //BLACKJACKBOT_CARD_H

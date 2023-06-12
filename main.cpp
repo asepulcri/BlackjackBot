@@ -2,7 +2,10 @@
 #include "shoe.h"
 
 int main() {
-    shoe::card testCard((shoe::Suit(shoe::Suit::clubs)), shoe::Rank(11));
+
+    shoe::shoe testShoe(int(3));
+
+    testShoe.shuffleShoe();
 
     return 0;
 }
