@@ -15,9 +15,18 @@ namespace card {
 
     enum Rank {
         ace = 1,
-        jack = 11,
-        queen = 12,
-        king = 13
+        two,
+        three,
+        four,
+        five,
+        six,
+        seven,
+        eight,
+        nine,
+        ten,
+        jack,
+        queen,
+        king
     };
 
     class card {

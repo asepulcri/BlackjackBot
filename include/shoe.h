@@ -1,8 +1,6 @@
 //
 // Created by Andrea on 08/06/2023.
 //
-#ifndef BLACKJACKBOT_SHOEGENERATOR_H
-#define BLACKJACKBOT_SHOEGENERATOR_H
 
 #include "card.h"
 #include <vector>
@@ -31,5 +29,3 @@ namespace shoe {
         }
     };
 }
-
-#endif //BLACKJACKBOT_SHOEGENERATOR_H
