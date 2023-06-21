@@ -5,7 +5,9 @@
 #ifndef BLACKJACKBOT_CARD_H
 #define BLACKJACKBOT_CARD_H
 
-namespace card {
+#pragma once
+
+namespace cards {
     enum Suit {
         clubs = 0,
         diamonds = 1,
@@ -35,15 +37,10 @@ namespace card {
         Rank m_rank;
 
     public:
-        card(Suit cardSuit, Rank cardRank): m_suit(cardSuit), m_rank(cardRank) {}
+        card(Suit cardSuit, Rank cardRank);
 
-        Suit getSuit() const {
-            return m_suit;
-        }
-
-        Rank getRank() const {
-            return m_rank;
-        }
+        Suit getSuit();
+        Rank getRank();
     };
 }
 
