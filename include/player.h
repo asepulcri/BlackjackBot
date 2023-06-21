@@ -10,7 +10,7 @@
 
 namespace players {
 	class player {
-	private:
+	protected:
 		std::vector<std::unique_ptr<cards::card>> m_hand;
 		int m_handValue;
 
@@ -18,15 +18,21 @@ namespace players {
 		player();
 
 		int getHandValue();
-		void drawCard(std::unique_ptr<cards::card > p_card);
+		void drawCard(std::unique_ptr<cards::card> p_card);
 	};
 
 
-	//class dealer : player {
-	//private:
-	//	card::card m_faceUpCard;
+	class dealer : public player {
+	private:
+		cards::card m_faceUpCard;
+		bool m_revealHand;
 
-	//public:
-	//	dealer() {}
-	//};
+	public:
+		dealer();
+
+		void revealHand();
+		void drawCard(std::unique_ptr<cards::card> p_card);
+		int getHandValue();
+		cards::card getFaceUpCard();
+	};
 }
