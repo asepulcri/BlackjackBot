@@ -18,5 +18,16 @@ int main() {
 		dealer1.drawCard(gameShoe.drawCard());
 	}
 
+	int playerHandValue = player1.getHandValue();
+
+	dealer1.revealHand();
+
+	int dealerHandValue = dealer1.getHandValue();
+
+	players::Decisions dealerDecision = dealer1.makeDecision();
+
+	while (dealerDecision == players::Decisions::hit)
+		dealer1.drawCard(gameShoe.drawCard());
+
 	return 0;
 }
