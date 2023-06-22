@@ -1,4 +1,5 @@
 #include <iostream>
+#include "../include/card.h"
 #include "../include/shoe.h"
 #include "../include/player.h"
 
@@ -14,7 +15,6 @@ int main() {
 
 	for (int i = 0; i < 2; i++) {
 		player1.drawCard(gameShoe.drawCard());
-
 		dealer1.drawCard(gameShoe.drawCard());
 	}
 
@@ -24,10 +24,13 @@ int main() {
 
 	int dealerHandValue = dealer1.getHandValue();
 
-	players::Decisions dealerDecision = dealer1.makeDecision();
+	cards::card dealerUpcard = dealer1.getFaceUpCard();
 
-	while (dealerDecision == players::Decisions::hit)
-		dealer1.drawCard(gameShoe.drawCard());
+	players::Decisions player1Decision = player1.makeDecision(dealer1.getFaceUpCard());
+
+	std::cout << "Player Card Total = " << playerHandValue << std::endl;
+	std::cout << "Dealer Upcard = " << std::to_underlying(dealerUpcard.getRank()) << std::endl;
+	std::cout << "Decision = " << player1Decision << std::endl;
 
 	return 0;
 }

@@ -22,6 +22,7 @@ namespace players {
 	protected:
 		std::vector<std::unique_ptr<cards::card>> m_hand;
 		int m_handValue;
+		bool m_softHand;
 
 	public:
 		player();
@@ -29,6 +30,11 @@ namespace players {
 		int getHandValue();
 		void calculateHandValue();
 		void drawCard(std::unique_ptr<cards::card> p_card);
+
+		Decisions makeDecision(cards::card p_dealerUpCard);
+		Decisions hardTotalsDecisions(cards::card p_dealerUpCard);
+		Decisions softTotalsDecisions(cards::card p_dealerUpCard);
+		Decisions pairSplittingDecisions(cards::card p_dealerUpCard);
 	};
 
 

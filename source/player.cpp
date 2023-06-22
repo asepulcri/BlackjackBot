@@ -1,7 +1,7 @@
 #include "../include/player.h"
 
-players::player::player() : m_handValue(int(0)) {
-};
+// Player base class
+players::player::player() : m_softHand(false), m_handValue(int(0)) {};
 
 int players::player::getHandValue() {
     calculateHandValue();
@@ -23,6 +23,8 @@ void players::player::calculateHandValue() {
         value += cardValue;
     }
 
+    m_softHand = aces > 0;
+
     while (value > 21 && aces > 0) {
         value -= 10;
         aces--;
@@ -35,8 +37,92 @@ void players::player::drawCard(std::unique_ptr<cards::card> p_card) {
 	m_hand.push_back(std::move(p_card));
 };
 
-players::dealer::dealer() : m_faceUpCard(cards::card(cards::Suit(cards::clubs), cards::Rank(cards::ace))), m_revealHand(bool(false)) {
-};
+players::Decisions players::player::makeDecision(cards::card p_dealerUpCard) {
+    if (m_softHand)
+        return softTotalsDecisions(p_dealerUpCard);
+
+    return hardTotalsDecisions(p_dealerUpCard);
+}
+
+players::Decisions players::player::hardTotalsDecisions(cards::card p_dealerUpCard) {
+    if (m_handValue < 8)
+        return players::Decisions::hit;
+
+    if (m_handValue > 17)
+        return players::Decisions::stand;
+    
+    int arr[10][10] = {
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 2, 2, 2, 2, 0, 0, 0, 0, 0},
+        {2, 2, 2, 2, 2, 2, 2, 2, 0, 0},
+        {2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+        {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1} };
+
+    int totalIndex = m_handValue - int(8);
+
+    int dealerIndex = p_dealerUpCard.getRank() < 10 ? p_dealerUpCard.getRank() != cards::Rank::ace ? p_dealerUpCard.getRank() - int(2) : int(9) : int(8);
+
+    int decisionToMake = arr[totalIndex][dealerIndex];
+
+    return static_cast<players::Decisions>(decisionToMake);
+}
+
+players::Decisions players::player::softTotalsDecisions(cards::card p_dealerUpCard) {
+
+    int arr[8][10] = {
+        {0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
+        {0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
+        {0, 0, 2, 2, 2, 0, 0, 0, 0, 0},
+        {0, 0, 2, 2, 2, 0, 0, 0, 0, 0},
+        {0, 2, 2, 2, 2, 0, 0, 0, 0, 0},
+        {2, 2, 2, 2, 2, 1, 1, 0, 0, 0},
+        {1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
+
+    int totalIndex = m_handValue - int(13);
+
+    int dealerIndex = p_dealerUpCard.getRank() < 10 ? p_dealerUpCard.getRank() != cards::Rank::ace ? p_dealerUpCard.getRank() - int(2) : int(9) : int(8);
+
+    int decisionToMake = arr[totalIndex][dealerIndex];
+
+    return static_cast<players::Decisions>(decisionToMake);
+}
+
+players::Decisions players::player::pairSplittingDecisions(cards::card p_dealerUpCard) {
+    if (m_handValue < 8)
+        return players::Decisions::hit;
+
+    if (m_handValue > 17)
+        return players::Decisions::stand;
+
+    int arr[10][10] = {
+        {3, 3, 3, 3, 3, 3, 1, 1, 1, 1},
+        {3, 3, 3, 3, 3, 3, 1, 1, 1, 1},
+        {1, 1, 1, 3, 3, 1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {3, 3, 3, 3, 3, 1, 1, 1, 1, 1},
+        {3, 3, 3, 3, 3, 3, 1, 1, 1, 1},
+        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+        {3, 3, 3, 3, 3, 1, 3, 3, 1, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3}};
+
+    int totalIndex = m_handValue / int(2) - int(2);
+
+    int dealerIndex = p_dealerUpCard.getRank() < 10 ? p_dealerUpCard.getRank() != cards::Rank::ace ? p_dealerUpCard.getRank() - int(2) : int(9) : int(8);
+
+    int decisionToMake = arr[totalIndex][dealerIndex];
+
+    return static_cast<players::Decisions>(decisionToMake);
+}
+
+// Dealer Class
+players::dealer::dealer() : m_faceUpCard(cards::card(cards::Suit(cards::clubs), cards::Rank(cards::ace))), m_revealHand(bool(false)) {};
 
 void players::dealer::revealHand() {
 	m_revealHand = true;
@@ -64,7 +150,7 @@ int players::dealer::getHandValue() {
 
 players::Decisions players::dealer::makeDecision() {
     calculateHandValue();
-    if (m_handValue < 17)
+    if (m_handValue <= 17 && m_softHand == true)
         return players::Decisions::hit;
 
     return players::Decisions::stand;
