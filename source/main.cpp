@@ -9,28 +9,33 @@ int main() {
 
 	gameShoe.shuffleShoe();
 
-	players::player player1;
+	int playerBuyIn;
+
+	std::cout << "Enter how many chips you want to buy in: ";
+
+	std::cin >> playerBuyIn;
+
+	players::player player1(playerBuyIn);
 
 	players::dealer dealer1;
 
-	for (int i = 0; i < 2; i++) {
-		player1.drawCard(gameShoe.drawCard());
-		dealer1.drawCard(gameShoe.drawCard());
+	while (player1.getWalletValue() > int(0)) {
+		int playerBet;
+		
+		std::cout << "Enter how many chips you want to bet: ";
+
+		std::cin >> playerBet;
+
+		player1.betHand(playerBet);
+
+		for (int i = 0; i < 2; i++) {
+			player1.drawCard(gameShoe.drawCard());
+			dealer1.drawCard(gameShoe.drawCard());
+		}
+
+		while (player1.getHandValue() < int(21) || dealer1.getHandValue() < int(21)) {
+		}
 	}
-
-	int playerHandValue = player1.getHandValue();
-
-	dealer1.revealHand();
-
-	int dealerHandValue = dealer1.getHandValue();
-
-	cards::card dealerUpcard = dealer1.getFaceUpCard();
-
-	players::Decisions player1Decision = player1.makeDecision(dealer1.getFaceUpCard());
-
-	std::cout << "Player Card Total = " << playerHandValue << std::endl;
-	std::cout << "Dealer Upcard = " << std::to_underlying(dealerUpcard.getRank()) << std::endl;
-	std::cout << "Decision = " << player1Decision << std::endl;
 
 	return 0;
 }

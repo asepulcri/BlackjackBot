@@ -1,14 +1,14 @@
 #include "../include/player.h"
 
 // Player base class
-players::player::player() : m_softHand(false), m_handValue(int(0)) {};
+players::person::person() : m_softHand(false), m_handValue(int(0)) {};
 
-int players::player::getHandValue() {
+int players::person::getHandValue() {
     calculateHandValue();
 	return m_handValue;
 };
 
-void players::player::calculateHandValue() {
+void players::person::calculateHandValue() {
     int value = 0;
     int aces = 0;
     for (const auto& card : m_hand) {
@@ -33,9 +33,20 @@ void players::player::calculateHandValue() {
     m_handValue = value;
 }
 
-void players::player::drawCard(std::unique_ptr<cards::card> p_card) {
+void players::person::drawCard(std::unique_ptr<cards::card> p_card) {
 	m_hand.push_back(std::move(p_card));
 };
+
+players::player::player(int p_buyIn) : m_wallet(p_buyIn) {};
+
+int players::player::getWalletValue() {
+    return m_wallet;
+}
+
+void players::player::betHand(int p_betValue) {
+    m_wallet -= p_betValue;
+    return;
+}
 
 players::Decisions players::player::makeDecision(cards::card p_dealerUpCard) {
     if (m_softHand)

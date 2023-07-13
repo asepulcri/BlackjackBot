@@ -18,18 +18,29 @@ namespace players {
 		surrender
 	};
 
-	class player {
+	class person {
 	protected:
+		person();
+
+	public:
 		std::vector<std::unique_ptr<cards::card>> m_hand;
 		int m_handValue;
 		bool m_softHand;
-
-	public:
-		player();
-
+		
 		int getHandValue();
 		void calculateHandValue();
 		void drawCard(std::unique_ptr<cards::card> p_card);
+	};
+
+	class player : public person {
+	protected:
+		int m_wallet;
+
+	public:
+		player(int p_buyIn);
+
+		int getWalletValue();
+		void betHand(int p_betValue);
 
 		Decisions makeDecision(cards::card p_dealerUpCard);
 		Decisions hardTotalsDecisions(cards::card p_dealerUpCard);
@@ -38,7 +49,7 @@ namespace players {
 	};
 
 
-	class dealer : public player {
+	class dealer : public person {
 	private:
 		cards::card m_faceUpCard;
 		bool m_revealHand;
