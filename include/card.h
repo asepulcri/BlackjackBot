@@ -2,6 +2,8 @@
 // Created by Andrea on 09/06/2023.
 //
 
+#include <vector>
+#include <string>
 #ifndef BLACKJACKBOT_CARD_H
 #define BLACKJACKBOT_CARD_H
 
@@ -30,6 +32,9 @@ namespace cards {
         queen,
         king
     };
+
+    static std::vector<std::string> suitNames = {"clubs", "diamonds", "hearts", "spades"};
+    static std::vector<std::string> rankNames = {"ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "Jack", "Queen", "King"};
 
     class card {
     private:

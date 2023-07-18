@@ -33,8 +33,11 @@ int main() {
 			dealer1.drawCard(gameShoe.drawCard());
 		}
 
-		while (player1.getHandValue() < int(21) || dealer1.getHandValue() < int(21)) {
-		}
+		std::cout << "Your hand is: " << std::endl;
+		player1.showHand();
+
+		std::cout << "Dealer faceup card is: ";
+		dealer1.showFaceUpCard();
 	}
 
 	return 0;

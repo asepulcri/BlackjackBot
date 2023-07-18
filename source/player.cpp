@@ -1,4 +1,5 @@
 #include "../include/player.h"
+#include <iostream>
 
 // Player base class
 players::person::person() : m_softHand(false), m_handValue(int(0)) {};
@@ -38,6 +39,15 @@ void players::person::drawCard(std::unique_ptr<cards::card> p_card) {
 };
 
 players::player::player(int p_buyIn) : m_wallet(p_buyIn) {};
+
+void players::player::showHand() {
+    if (m_hand.empty())
+        return;
+
+    for (int i = 0; i < m_hand.size(); i++) {
+        std::cout << cards::rankNames[(m_hand[i]->getRank())] << " of " << cards::suitNames[(m_hand[i]->getSuit())] << std::endl;
+    }
+}
 
 int players::player::getWalletValue() {
     return m_wallet;
@@ -165,4 +175,8 @@ players::Decisions players::dealer::makeDecision() {
         return players::Decisions::hit;
 
     return players::Decisions::stand;
+}
+
+void players::dealer::showFaceUpCard() {
+    std::cout << cards::rankNames[(m_faceUpCard.getRank())] << " of " << cards::suitNames[(m_faceUpCard.getSuit())] << std::endl;
 }
