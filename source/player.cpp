@@ -45,7 +45,7 @@ void players::player::showHand() {
         return;
 
     for (int i = 0; i < m_hand.size(); i++) {
-        std::cout << cards::rankNames[(m_hand[i]->getRank())] << " of " << cards::suitNames[(m_hand[i]->getSuit())] << std::endl;
+        std::cout << cards::rankNames[(m_hand[i]->getRank() - int(1))] << " of " << cards::suitNames[(m_hand[i]->getSuit())] << std::endl;
     }
 }
 
@@ -58,7 +58,13 @@ void players::player::betHand(int p_betValue) {
     return;
 }
 
+void players::player::winMoney(int p_betValue) {
+    m_wallet += p_betValue;
+    return;
+}
+
 players::Decisions players::player::makeDecision(cards::card p_dealerUpCard) {
+    calculateHandValue();
     if (m_softHand)
         return softTotalsDecisions(p_dealerUpCard);
 
@@ -105,7 +111,7 @@ players::Decisions players::player::softTotalsDecisions(cards::card p_dealerUpCa
         {1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
-    int totalIndex = m_handValue - int(13);
+    int totalIndex = m_handValue - int(14);
 
     int dealerIndex = p_dealerUpCard.getRank() < 10 ? p_dealerUpCard.getRank() != cards::Rank::ace ? p_dealerUpCard.getRank() - int(2) : int(9) : int(8);
 
@@ -171,12 +177,12 @@ int players::dealer::getHandValue() {
 
 players::Decisions players::dealer::makeDecision() {
     calculateHandValue();
-    if (m_handValue <= 17 && m_softHand == true)
+    if (m_handValue <= 17 || (m_handValue == int(17) && m_softHand == true))
         return players::Decisions::hit;
 
     return players::Decisions::stand;
 }
 
 void players::dealer::showFaceUpCard() {
-    std::cout << cards::rankNames[(m_faceUpCard.getRank())] << " of " << cards::suitNames[(m_faceUpCard.getSuit())] << std::endl;
+    std::cout << cards::rankNames[(m_faceUpCard.getRank() - int(1))] << " of " << cards::suitNames[(m_faceUpCard.getSuit())] << std::endl;
 }

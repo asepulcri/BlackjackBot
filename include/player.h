@@ -43,6 +43,7 @@ namespace players {
 		void showHand();
 		int getWalletValue();
 		void betHand(int p_betValue);
+		void winMoney(int p_betValue);
 
 		Decisions makeDecision(cards::card p_dealerUpCard);
 		Decisions hardTotalsDecisions(cards::card p_dealerUpCard);

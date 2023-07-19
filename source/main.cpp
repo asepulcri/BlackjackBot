@@ -38,6 +38,50 @@ int main() {
 
 		std::cout << "Dealer faceup card is: ";
 		dealer1.showFaceUpCard();
+
+		players::Decisions player1Decision = player1.makeDecision(dealer1.getFaceUpCard());
+		players::Decisions dealer1Decision = dealer1.makeDecision();
+
+		while (player1Decision != players::Decisions::stand) {
+			if (player1Decision == players::Decisions::hit)
+				player1.drawCard(gameShoe.drawCard());
+
+			if (player1Decision == players::Decisions::doubledown) {
+				player1.drawCard(gameShoe.drawCard());
+				player1.betHand(playerBet);
+				playerBet *= 2;
+			}
+
+			player1Decision = player1.makeDecision(dealer1.getFaceUpCard());
+		}
+
+		if (player1.getHandValue() > int(21)) {
+			std::cout << "You've busted" << std::endl;
+			continue;
+		}
+
+		while (dealer1Decision != players::Decisions::stand) {
+			if (dealer1Decision == players::Decisions::hit)
+				dealer1.drawCard(gameShoe.drawCard());
+
+			dealer1Decision = dealer1.makeDecision();
+
+		}
+		if (dealer1.getHandValue() > int(21)) {
+			std::cout << "Dealer busted" << std::endl;
+			player1.winMoney(playerBet);
+			continue;
+		}
+
+		if (player1.getHandValue() > dealer1.getHandValue()) {
+			std::cout << "You won the hand" << std::endl;
+			player1.winMoney(playerBet * 2);
+			continue;
+		}
+		else {
+			std::cout << "Dealer won the hand" << std::endl;
+			continue;
+		}
 	}
 
 	return 0;
