@@ -28,9 +28,11 @@ namespace players {
 		bool m_softHand;
 
 	public:
+		void showHand();
 		int getHandValue();
 		void calculateHandValue();
 		void drawCard(std::unique_ptr<cards::card> p_card);
+		void clearHand();
 	};
 
 	class player : public person {
@@ -40,7 +42,6 @@ namespace players {
 	public:
 		player(int p_buyIn);
 
-		void showHand();
 		int getWalletValue();
 		void betHand(int p_betValue);
 		void winMoney(int p_betValue);

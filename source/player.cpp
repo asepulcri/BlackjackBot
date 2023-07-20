@@ -4,6 +4,16 @@
 // Player base class
 players::person::person() : m_softHand(false), m_handValue(int(0)) {};
 
+void players::person::showHand() {
+    if (m_hand.empty())
+        return;
+
+    for (int i = 0; i < m_hand.size(); i++) {
+        std::cout << cards::rankNames[(m_hand[i]->getRank() - int(1))] << " of " << cards::suitNames[(m_hand[i]->getSuit())] << std::endl;
+    }
+    return;
+}
+
 int players::person::getHandValue() {
     calculateHandValue();
 	return m_handValue;
@@ -32,22 +42,20 @@ void players::person::calculateHandValue() {
     }
 
     m_handValue = value;
+    return;
 }
 
 void players::person::drawCard(std::unique_ptr<cards::card> p_card) {
 	m_hand.push_back(std::move(p_card));
+    return;
 };
 
-players::player::player(int p_buyIn) : m_wallet(p_buyIn) {};
-
-void players::player::showHand() {
-    if (m_hand.empty())
-        return;
-
-    for (int i = 0; i < m_hand.size(); i++) {
-        std::cout << cards::rankNames[(m_hand[i]->getRank() - int(1))] << " of " << cards::suitNames[(m_hand[i]->getSuit())] << std::endl;
-    }
+void players::person::clearHand() {
+    m_hand.clear();
+    return;
 }
+
+players::player::player(int p_buyIn) : m_wallet(p_buyIn) {};
 
 int players::player::getWalletValue() {
     return m_wallet;
@@ -156,6 +164,7 @@ players::dealer::dealer() : m_faceUpCard(cards::card(cards::Suit(cards::clubs), 
 
 void players::dealer::revealHand() {
 	m_revealHand = true;
+    return;
 }
 
 cards::card players::dealer::getFaceUpCard() {
@@ -167,6 +176,7 @@ void players::dealer::drawCard(std::unique_ptr<cards::card> p_card) {
 		m_faceUpCard = *p_card;
 
 	m_hand.push_back(std::move(p_card));
+    return;
 };
 
 int players::dealer::getHandValue() {
@@ -188,4 +198,5 @@ players::Decisions players::dealer::makeDecision() {
 
 void players::dealer::showFaceUpCard() {
     std::cout << cards::rankNames[(m_faceUpCard.getRank() - int(1))] << " of " << cards::suitNames[(m_faceUpCard.getSuit())] << std::endl;
+    return;
 }

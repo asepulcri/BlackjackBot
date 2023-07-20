@@ -28,6 +28,9 @@ int main() {
 
 		player1.betHand(playerBet);
 
+		player1.clearHand();
+		dealer1.clearHand();
+
 		for (int i = 0; i < 2; i++) {
 			player1.drawCard(gameShoe.drawCard());
 			dealer1.drawCard(gameShoe.drawCard());
@@ -60,6 +63,12 @@ int main() {
 			continue;
 		}
 
+		dealer1.revealHand();
+
+		std::cout << "Dealer's hand is: " << std::endl;
+
+		dealer1.showHand();
+
 		while (dealer1Decision != players::Decisions::stand) {
 			if (dealer1Decision == players::Decisions::hit)
 				dealer1.drawCard(gameShoe.drawCard());
@@ -67,6 +76,7 @@ int main() {
 			dealer1Decision = dealer1.makeDecision();
 
 		}
+
 		if (dealer1.getHandValue() > int(21)) {
 			std::cout << "Dealer busted" << std::endl;
 			player1.winMoney(playerBet * 2);
