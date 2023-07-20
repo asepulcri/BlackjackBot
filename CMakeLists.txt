@@ -3,6 +3,23 @@ project(BlackjackBot)
 
 set(CMAKE_CXX_STANDARD 23)
 
-add_executable(BlackjackBot main.cpp "include/dealer.h" "include/player.h")
+add_library(BlackjackBot STATIC
+	source/card.cpp
+	source/player.cpp
+	source/shoe.cpp
 
-target_include_directories(BlackjackBot PUBLIC include)
+	include/card.h
+	include/player.h
+	include/shoe.h
+ )
+
+add_executable(BlackjackBotApp
+	source/main.cpp
+
+	source/card.cpp
+	source/player.cpp
+	source/shoe.cpp
+
+	include/card.h
+	include/player.h
+	include/shoe.h)

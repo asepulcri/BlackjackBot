@@ -7,25 +7,19 @@
 #include <algorithm>
 #include <random>
 
-namespace shoe {
+#pragma once
+
+namespace shoes {
     class shoe {
     private:
         int m_size;
-        std::vector<card::card> currentShoe;
+        std::vector<std::unique_ptr<cards::card>> m_currentShoe;
 
     public:
-        shoe(int shoeSize): m_size(shoeSize) {
-            for(int i = 1; i <= shoeSize; i++) {
-                for(int j = 0; j < 52; j++) {
-                    currentShoe.emplace_back(card::Suit(j / 13), card::Rank((j % 13) + 1));
-                }
-            }
-        }
+        shoe(int shoeSize);
 
-        void shuffleShoe() {
-            std::random_device rd;
-            std::mt19937 generator(rd());
-            std::shuffle(currentShoe.begin(), currentShoe.end(), generator);
-        }
+        void shuffleShoe();
+        std::unique_ptr<cards::card> drawCard();
+
     };
 }
