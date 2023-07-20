@@ -14,6 +14,15 @@ void players::person::showHand() {
     return;
 }
 
+void players::person::showLastDrawnCard() {
+    if (m_hand.empty())
+        return;
+
+    std::cout << cards::rankNames[(m_hand.back()->getRank() - int(1))] << " of " << cards::suitNames[(m_hand.back()->getSuit())] << std::endl;
+
+    return;
+}
+
 int players::person::getHandValue() {
     calculateHandValue();
 	return m_handValue;

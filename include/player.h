@@ -29,6 +29,7 @@ namespace players {
 
 	public:
 		void showHand();
+		void showLastDrawnCard();
 		int getHandValue();
 		void calculateHandValue();
 		void drawCard(std::unique_ptr<cards::card> p_card);

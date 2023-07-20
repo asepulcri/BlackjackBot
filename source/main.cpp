@@ -46,11 +46,18 @@ int main() {
 		players::Decisions dealer1Decision = dealer1.makeDecision();
 
 		while (player1Decision != players::Decisions::stand) {
-			if (player1Decision == players::Decisions::hit)
+			if (player1Decision == players::Decisions::hit)	{
+				std::cout << "Player hit" << std::endl;
 				player1.drawCard(gameShoe.drawCard());
+				std::cout << "Player drew: " << std::endl;
+				player1.showLastDrawnCard();
+			}
 
 			if (player1Decision == players::Decisions::doubledown) {
+				std::cout << "Player doubled down" << std::endl;
 				player1.drawCard(gameShoe.drawCard());
+				std::cout << "Player drew: " << std::endl;
+				player1.showLastDrawnCard();
 				player1.betHand(playerBet);
 				playerBet *= 2;
 			}
@@ -70,8 +77,12 @@ int main() {
 		dealer1.showHand();
 
 		while (dealer1Decision != players::Decisions::stand) {
-			if (dealer1Decision == players::Decisions::hit)
+			if (dealer1Decision == players::Decisions::hit) {
+				std::cout << "Dealer hit" << std::endl;
 				dealer1.drawCard(gameShoe.drawCard());
+				std::cout << "Dealer drew: " << std::endl;
+				dealer1.showLastDrawnCard();
+			}
 
 			dealer1Decision = dealer1.makeDecision();
 
@@ -93,6 +104,8 @@ int main() {
 			continue;
 		}
 	}
+
+	std::cout << "You ran out of money" << std::endl;
 
 	return 0;
 }
