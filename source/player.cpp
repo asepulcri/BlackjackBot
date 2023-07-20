@@ -65,6 +65,9 @@ void players::player::winMoney(int p_betValue) {
 
 players::Decisions players::player::makeDecision(cards::card p_dealerUpCard) {
     calculateHandValue();
+    if (m_handValue == int(21))
+        return players::Decisions::stand;
+
     if (m_softHand)
         return softTotalsDecisions(p_dealerUpCard);
 
@@ -111,7 +114,7 @@ players::Decisions players::player::softTotalsDecisions(cards::card p_dealerUpCa
         {1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
-    int totalIndex = m_handValue - int(14);
+    int totalIndex = m_handValue - int(13);
 
     int dealerIndex = p_dealerUpCard.getRank() < 10 ? p_dealerUpCard.getRank() != cards::Rank::ace ? p_dealerUpCard.getRank() - int(2) : int(9) : int(8);
 
