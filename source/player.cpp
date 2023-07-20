@@ -73,6 +73,10 @@ void players::player::winMoney(int p_betValue) {
 
 players::Decisions players::player::makeDecision(cards::card p_dealerUpCard) {
     calculateHandValue();
+
+    if (m_handValue > int(21))
+        return players::Decisions::stand;
+
     if (m_handValue == int(21))
         return players::Decisions::stand;
 
