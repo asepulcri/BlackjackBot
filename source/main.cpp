@@ -69,7 +69,7 @@ int main() {
 		}
 		if (dealer1.getHandValue() > int(21)) {
 			std::cout << "Dealer busted" << std::endl;
-			player1.winMoney(playerBet);
+			player1.winMoney(playerBet * 2);
 			continue;
 		}
 
