@@ -44,6 +44,7 @@ namespace players {
 		player(int p_buyIn);
 
 		int getWalletValue();
+		int getHandSize();
 		void betHand(int p_betValue);
 		void winMoney(int p_betValue);
 

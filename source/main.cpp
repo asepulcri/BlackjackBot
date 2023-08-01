@@ -5,7 +5,7 @@
 
 int main() {
 
-	shoes::shoe gameShoe(5);
+	shoes::shoe gameShoe(1);
 
 	gameShoe.shuffleShoe();
 
@@ -46,20 +46,26 @@ int main() {
 		players::Decisions dealer1Decision = dealer1.makeDecision();
 
 		while (player1Decision != players::Decisions::stand) {
-			if (player1Decision == players::Decisions::hit)	{
-				std::cout << "Player hit" << std::endl;
-				player1.drawCard(gameShoe.drawCard());
-				std::cout << "Player drew: " << std::endl;
-				player1.showLastDrawnCard();
-			}
+			switch (player1Decision) {
+				case players::Decisions::doubledown:
+					if (player1.getHandSize() == int(2)) {
+						std::cout << "Player doubled down" << std::endl;
+						player1.drawCard(gameShoe.drawCard());
+						std::cout << "Player drew: " << std::endl;
+						player1.showLastDrawnCard();
+						player1.betHand(playerBet);
+						playerBet *= 2;
+					}
+					else
+						player1Decision = players::Decisions::hit;
+					break;
 
-			if (player1Decision == players::Decisions::doubledown) {
-				std::cout << "Player doubled down" << std::endl;
-				player1.drawCard(gameShoe.drawCard());
-				std::cout << "Player drew: " << std::endl;
-				player1.showLastDrawnCard();
-				player1.betHand(playerBet);
-				playerBet *= 2;
+				case players::Decisions::hit:
+					std::cout << "Player hit" << std::endl;
+					player1.drawCard(gameShoe.drawCard());
+					std::cout << "Player drew: " << std::endl;
+					player1.showLastDrawnCard();
+					break;
 			}
 
 			player1Decision = player1.makeDecision(dealer1.getFaceUpCard());

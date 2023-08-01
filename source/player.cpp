@@ -70,6 +70,10 @@ int players::player::getWalletValue() {
     return m_wallet;
 }
 
+int players::player::getHandSize() {
+    return size(m_hand);
+}
+
 void players::player::betHand(int p_betValue) {
     m_wallet -= p_betValue;
     return;
