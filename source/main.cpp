@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include "../include/card.h"
 #include "../include/shoe.h"
 #include "../include/player.h"

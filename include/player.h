@@ -5,6 +5,7 @@
 #include "card.h"
 #include "shoe.h"
 #include <vector>
+#include <memory>
 
 #pragma once
 

@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 #ifndef BLACKJACKBOT_CARD_H
 #define BLACKJACKBOT_CARD_H
 
