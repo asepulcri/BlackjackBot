@@ -5,7 +5,7 @@
 
 int main() {
 
-	shoes::shoe gameShoe(1);
+	shoes::shoe gameShoe(10);
 
 	gameShoe.shuffleShoe();
 
