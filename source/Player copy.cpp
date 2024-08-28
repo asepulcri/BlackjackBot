@@ -1,34 +1,33 @@
-#include "../include/player.h"
-#include <iostream>
+#include "Player.h"
 
 // Player base class
-players::person::person() : m_softHand(false), m_handValue(int(0)) {};
+Player::Player() {};
 
-void players::person::showHand() {
+void Player::Player::showHand() {
     if (m_hand.empty())
         return;
 
     for (int i = 0; i < m_hand.size(); i++) {
-        std::cout << cards::rankNames[(m_hand[i]->getRank() - int(1))] << " of " << cards::suitNames[(m_hand[i]->getSuit())] << std::endl;
+        std::cout << rankNames[(m_hand[i]->getRank() - int(1))] << " of " << suitNames[(m_hand[i]->getSuit())] << std::endl;
     }
     return;
 }
 
-void players::person::showLastDrawnCard() {
+void Player::showLastDrawnCard() {
     if (m_hand.empty())
         return;
 
-    std::cout << cards::rankNames[(m_hand.back()->getRank() - int(1))] << " of " << cards::suitNames[(m_hand.back()->getSuit())] << std::endl;
+    std::cout << rankNames[(m_hand.back()->getRank() - int(1))] << " of " << suitNames[(m_hand.back()->getSuit())] << std::endl;
 
     return;
 }
 
-int players::person::getHandValue() {
+int Player::getHandValue() {
     calculateHandValue();
 	return m_handValue;
 };
 
-void players::person::calculateHandValue() {
+void Player::calculateHandValue() {
     int value = 0;
     int aces = 0;
     for (const auto& card : m_hand) {
@@ -36,7 +35,7 @@ void players::person::calculateHandValue() {
         if (cardValue >= 10) {
             cardValue = 10;
         }
-        else if (cardValue == cards::ace) {
+        else if (cardValue == ace) {
             aces++;
             cardValue = 11;
         }
@@ -54,40 +53,25 @@ void players::person::calculateHandValue() {
     return;
 }
 
-void players::person::drawCard(std::unique_ptr<cards::card> p_card) {
+void Player::drawCard(std::unique_ptr<Card> p_card) {
 	m_hand.push_back(std::move(p_card));
     return;
 };
 
-void players::person::clearHand() {
+void Player::clearHand() {
     m_hand.clear();
     return;
 }
 
-players::player::player(int p_buyIn) : m_wallet(p_buyIn) {};
 
-int players::player::getWalletValue() {
-    return m_wallet;
-}
-
-void players::player::betHand(int p_betValue) {
-    m_wallet -= p_betValue;
-    return;
-}
-
-void players::player::winMoney(int p_betValue) {
-    m_wallet += p_betValue;
-    return;
-}
-
-players::Decisions players::player::makeDecision(cards::card p_dealerUpCard) {
+Decisions Player::makeDecision(Card p_dealerUpCard) {
     calculateHandValue();
 
     if (m_handValue > int(21))
-        return players::Decisions::stand;
+        return stand;
 
     if (m_handValue == int(21))
-        return players::Decisions::stand;
+        return stand;
 
     if (m_softHand)
         return softTotalsDecisions(p_dealerUpCard);
@@ -95,12 +79,12 @@ players::Decisions players::player::makeDecision(cards::card p_dealerUpCard) {
     return hardTotalsDecisions(p_dealerUpCard);
 }
 
-players::Decisions players::player::hardTotalsDecisions(cards::card p_dealerUpCard) {
+Decisions Player::hardTotalsDecisions(Card p_dealerUpCard) {
     if (m_handValue < 8)
-        return players::Decisions::hit;
+        return hit;
 
     if (m_handValue > 17)
-        return players::Decisions::stand;
+        return stand;
     
     int arr[10][10] = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -120,10 +104,10 @@ players::Decisions players::player::hardTotalsDecisions(cards::card p_dealerUpCa
 
     int decisionToMake = arr[totalIndex][dealerIndex];
 
-    return static_cast<players::Decisions>(decisionToMake);
+    return static_cast<Decisions>(decisionToMake);
 }
 
-players::Decisions players::player::softTotalsDecisions(cards::card p_dealerUpCard) {
+Decisions Player::softTotalsDecisions(Card p_dealerUpCard) {
 
     int arr[8][10] = {
         {0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
@@ -137,19 +121,19 @@ players::Decisions players::player::softTotalsDecisions(cards::card p_dealerUpCa
 
     int totalIndex = m_handValue - int(13);
 
-    int dealerIndex = p_dealerUpCard.getRank() < 10 ? p_dealerUpCard.getRank() != cards::Rank::ace ? p_dealerUpCard.getRank() - int(2) : int(9) : int(8);
+    int dealerIndex = p_dealerUpCard.getRank() < 10 ? p_dealerUpCard.getRank() != ace ? p_dealerUpCard.getRank() - int(2) : int(9) : int(8);
 
     int decisionToMake = arr[totalIndex][dealerIndex];
 
-    return static_cast<players::Decisions>(decisionToMake);
+    return static_cast<Decisions>(decisionToMake);
 }
 
-players::Decisions players::player::pairSplittingDecisions(cards::card p_dealerUpCard) {
+Decisions Player::pairSplittingDecisions(Card p_dealerUpCard) {
     if (m_handValue < 8)
-        return players::Decisions::hit;
+        return hit;
 
     if (m_handValue > 17)
-        return players::Decisions::stand;
+        return stand;
 
     int arr[10][10] = {
         {3, 3, 3, 3, 3, 3, 1, 1, 1, 1},
@@ -169,22 +153,22 @@ players::Decisions players::player::pairSplittingDecisions(cards::card p_dealerU
 
     int decisionToMake = arr[totalIndex][dealerIndex];
 
-    return static_cast<players::Decisions>(decisionToMake);
+    return static_cast<Decisions>(decisionToMake);
 }
 
 // Dealer Class
-players::dealer::dealer() : m_faceUpCard(cards::card(cards::Suit(cards::clubs), cards::Rank(cards::ace))), m_revealHand(bool(false)) {};
+Dealer() : m_revealHand(bool(false)) {};
 
-void players::dealer::revealHand() {
+void Dealer::revealHand() {
 	m_revealHand = true;
     return;
 }
 
-cards::card players::dealer::getFaceUpCard() {
+Card Dealer::getFaceUpCard() {
 	return m_faceUpCard;
 }
 
-void players::dealer::drawCard(std::unique_ptr<cards::card> p_card) {
+void Dealer::drawCard(std::unique_ptr<Card> p_card) {
 	if (m_hand.empty())
 		m_faceUpCard = *p_card;
 
@@ -192,7 +176,7 @@ void players::dealer::drawCard(std::unique_ptr<cards::card> p_card) {
     return;
 };
 
-int players::dealer::getHandValue() {
+int Dealer::getHandValue() {
     if (m_revealHand) {
         calculateHandValue();
 		return m_handValue;
@@ -201,15 +185,15 @@ int players::dealer::getHandValue() {
 	return -1;
 }
 
-players::Decisions players::dealer::makeDecision() {
+Decisions Dealer::makeDecision() {
     calculateHandValue();
     if (m_handValue <= 17 || (m_handValue == int(17) && m_softHand == true))
-        return players::Decisions::hit;
+        return hit;
 
-    return players::Decisions::stand;
+    return stand;
 }
 
-void players::dealer::showFaceUpCard() {
-    std::cout << cards::rankNames[(m_faceUpCard.getRank() - int(1))] << " of " << cards::suitNames[(m_faceUpCard.getSuit())] << std::endl;
+void Dealer::showFaceUpCard() {
+    std::cout << rankNames[(m_faceUpCard.getRank() - int(1))] << " of " << suitNames[(m_faceUpCard.getSuit())] << std::endl;
     return;
 }
