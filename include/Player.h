@@ -30,19 +30,21 @@ class Player {
 
 		void drawCard(std::unique_ptr<Card> p_card);
 		int getHandValue();
-		Decisions makeDecision();
+		Decisions makeDecision(Rank p_dealerUpCard);
 
-		Decisions hardTotalsDecisions(Card p_dealerUpCard);
-		Decisions softTotalsDecisions(Card p_dealerUpCard);
-		Decisions pairSplittingDecisions(Card p_dealerUpCard);
+		Decisions hardTotalsDecisions(Rank p_dealerUpCard);
+		Decisions softTotalsDecisions(Rank p_dealerUpCard);
+		Decisions pairSplittingDecisions(Rank p_dealerUpCard);
 };
 
-class Dealer : private Player {
+class Dealer : public Player {
 	private:
-		int m_upCardValue;
+		Rank m_upCardRank;
 
 	public:
 		Dealer();
 
 		Decisions makeDecision();
+		void checkUpCard();
+		Rank getUpCard();
 };
