@@ -20,31 +20,32 @@ enum Decisions {
 
 class Player {
 	protected:
-		int m_handValue;
-		bool m_softHand;
-		int m_aces;
-		std::vector<std::unique_ptr<Card>> m_hand;
+		int m_splits;
+		std::vector<int> m_handValue;
+		std::vector<bool> m_softHand;
+		std::vector<int> m_aces;
+		std::vector<std::vector<std::unique_ptr<Card>>> m_hand;
 
 	public:
 		Player();
 
-		void drawCard(std::unique_ptr<Card> p_card);
-		int getHandValue();
-		Decisions makeDecision(Rank p_dealerUpCard);
+		void drawCard(int p_hand, std::unique_ptr<Card> p_card);
+		int getHandValue(int p_hand);
+		Decisions makeDecision(int p_hand, Rank p_dealerUpCard);
 
-		Decisions hardTotalsDecisions(Rank p_dealerUpCard);
-		Decisions softTotalsDecisions(Rank p_dealerUpCard);
-		Decisions pairSplittingDecisions(Rank p_dealerUpCard);
+		Decisions hardTotalsDecisions(int p_hand, Rank p_dealerUpCard);
+		Decisions softTotalsDecisions(int p_hand, Rank p_dealerUpCard);
+		Decisions pairSplittingDecisions(int p_hand, Rank p_dealerUpCard);
 };
 
-class Dealer : public Player {
-	private:
-		Rank m_upCardRank;
+// class Dealer : public Player {
+// 	private:
+// 		Rank m_upCardRank;
 
-	public:
-		Dealer();
+// 	public:
+// 		Dealer();
 
-		Decisions makeDecision();
-		void checkUpCard();
-		Rank getUpCard();
-};
+// 		Decisions makeDecision();
+// 		void checkUpCard();
+// 		Rank getUpCard();
+// };
