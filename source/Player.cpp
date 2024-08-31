@@ -53,7 +53,7 @@ Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
     if(m_handValue[p_hand] == 21)
         return stand;
 
-    if(m_hand[p_hand][0]->getRank() == m_hand[p_hand][1]->getRank()) {
+    if(m_hand[p_hand][0]->getRank() == m_hand[p_hand][1]->getRank() && m_hand.size() < 4) {
         Decisions splitDecision = pairSplittingDecisions(p_hand, p_dealerUpCard);
 
         if(splitDecision == split)
@@ -118,27 +118,23 @@ Decisions Player::softTotalsDecisions(int p_hand, Rank p_dealerUpCard) {
 }
 
 Decisions Player::pairSplittingDecisions(int p_hand, Rank p_dealerUpCard) {
-    if (m_handValue[p_hand] < 8)
-        return hit;
-
-    if (m_handValue[p_hand] > 17)
-        return stand;
-
     int arr[10][10] = {
-        {3, 3, 3, 3, 3, 3, 1, 1, 1, 1},
-        {3, 3, 3, 3, 3, 3, 1, 1, 1, 1},
-        {1, 1, 1, 3, 3, 1, 1, 1, 1, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {3, 3, 3, 3, 3, 1, 1, 1, 1, 1},
-        {3, 3, 3, 3, 3, 3, 1, 1, 1, 1},
         {3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
-        {3, 3, 3, 3, 3, 1, 3, 3, 1, 1},
+        {1, 3, 3, 3, 3, 3, 3, 1, 1, 1},
+        {1, 3, 3, 3, 3, 3, 3, 1, 1, 1},
+        {1, 1, 1, 1, 3, 3, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3}};
+        {1, 3, 3, 3, 3, 3, 1, 1, 1, 1},
+        {1, 3, 3, 3, 3, 3, 3, 1, 1, 1},
+        {3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+        {1, 3, 3, 3, 3, 3, 1, 3, 3, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
-    int totalIndex = m_handValue[p_hand] / int(2) - int(2);
+    int rankCard = m_hand[p_hand][0]->getRank();
 
-    int dealerIndex = p_dealerUpCard < 10 ? p_dealerUpCard != ace ? p_dealerUpCard - int(2) : int(9) : int(8);
+    int totalIndex = rankCard < 10 ? rankCard - 1 : int(9);
+
+    int dealerIndex = p_dealerUpCard < 10 ? p_dealerUpCard - 1 : int(9);
 
     int decisionToMake = arr[totalIndex][dealerIndex];
 
