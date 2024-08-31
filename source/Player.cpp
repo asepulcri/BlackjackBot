@@ -3,10 +3,11 @@
 // Player base class
 
 Player::Player() {
-    m_splits = 0;
+    m_lastHandIdx = 0;
     m_aces = {0};
     m_handValue = {0};
     m_softHand = {false};
+    addNewHand();
 }
 
 void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
@@ -32,6 +33,18 @@ void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     
     return;
 };
+
+void Player::addNewHand() {
+    m_hand.emplace_back();
+}
+
+void Player::splitHand(int p_hand) {
+    m_lastHandIdx ++;
+    addNewHand();
+
+    m_hand[m_lastHandIdx].push_back(std::move(m_hand[p_hand][1]));
+    m_hand[p_hand].pop_back();
+}
 
 Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
     if(m_handValue[p_hand] > 21)

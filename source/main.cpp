@@ -10,10 +10,12 @@ int main() {
 
 	gameShoe.shuffleShoe();
 
-	Player player1;
+	Player player1;;
 
 	player1.drawCard(0, std::make_unique<Card> (Suit(spades), Rank(ace)));
 	player1.drawCard(0, std::make_unique<Card> (Suit(clubs), Rank(ace)));
+
+	player1.splitHand(0);
 
 	return 0;
 }

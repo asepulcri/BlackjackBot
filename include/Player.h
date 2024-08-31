@@ -20,7 +20,7 @@ enum Decisions {
 
 class Player {
 	protected:
-		int m_splits;
+		int m_lastHandIdx;
 		std::vector<int> m_handValue;
 		std::vector<bool> m_softHand;
 		std::vector<int> m_aces;
@@ -30,6 +30,8 @@ class Player {
 		Player();
 
 		void drawCard(int p_hand, std::unique_ptr<Card> p_card);
+		void addNewHand();
+		void splitHand(int p_hand);
 		int getHandValue(int p_hand);
 		Decisions makeDecision(int p_hand, Rank p_dealerUpCard);
 
