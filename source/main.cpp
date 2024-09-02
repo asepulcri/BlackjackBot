@@ -12,10 +12,5 @@ int main() {
 
 	Player player1;;
 
-	player1.drawCard(0, std::make_unique<Card> (Suit(spades), Rank(ace)));
-	player1.drawCard(0, std::make_unique<Card> (Suit(clubs), Rank(ace)));
-
-	Decisions decisionPlayer1 = player1.makeDecision(0, Rank(ten));
-
 	return 0;
 }

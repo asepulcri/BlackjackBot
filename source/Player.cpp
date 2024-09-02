@@ -7,6 +7,7 @@ Player::Player() {
     m_aces = {0};
     m_handValue = {0};
     m_softHand = {false};
+    m_wallet = 0;
     addNewHand();
 }
 
@@ -44,6 +45,15 @@ void Player::splitHand(int p_hand) {
 
     m_hand[m_lastHandIdx].push_back(std::move(m_hand[p_hand][1]));
     m_hand[p_hand].pop_back();
+}
+
+void Player::betHand(int p_hand, int p_bet) {
+    m_bets[p_hand] += p_bet;
+    m_wallet -= p_bet;
+}
+
+void Player::resetHand() {
+
 }
 
 Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
@@ -141,20 +151,48 @@ Decisions Player::pairSplittingDecisions(int p_hand, Rank p_dealerUpCard) {
     return static_cast<Decisions>(decisionToMake);
 }
 
-// Dealer::Dealer() {
-// };
+Dealer::Dealer() {
+};
 
-// Decisions Dealer::makeDecision() {
-//     if(m_handValue < 17)
-//         return hit;
+Decisions Dealer::makeDecision() {
+    if(m_handValue < 17)
+        return hit;
 
-//     return stand;
-// };
+    return stand;
+};
 
-// void Dealer::checkUpCard() {
-//     m_upCardRank = m_hand[1]->getRank();
-// }
+void Dealer::drawCard(std::unique_ptr<Card> p_card) {
+    int cardValue = p_card->getRank();
 
-// Rank Dealer::getUpCard() {
-//     return m_upCardRank;
-// }
+    if(m_handValue = 0) {
+        m_upCardRank = static_cast<Rank> (cardValue);
+    }
+	
+    if(cardValue >= 10)
+        cardValue = 10;
+    
+    else if(cardValue == ace) {
+        m_softHand = true;
+        m_aces ++;
+        cardValue = 11;
+    }
+
+    m_handValue += cardValue;
+
+    while(m_handValue > 21 && m_aces > 0) {
+        m_handValue -= 10;
+        m_aces --;
+    }
+
+    m_hand.push_back(std::move(p_card));
+    
+    return;
+};
+
+int Dealer::getHandValue() {
+    return m_handValue;
+}
+
+Rank Dealer::getUpCardRank() {
+    return m_upCardRank;
+}
