@@ -1,2 +1,0 @@
-/usr/bin/ar qc libBlackjackBot.a CMakeFiles/BlackjackBot.dir/source/card.cpp.o CMakeFiles/BlackjackBot.dir/source/player.cpp.o CMakeFiles/BlackjackBot.dir/source/shoe.cpp.o
-/usr/bin/ranlib libBlackjackBot.a

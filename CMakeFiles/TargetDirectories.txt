@@ -1,4 +1,0 @@
-/home/asepulcri/Documents/BlackjackBot/CMakeFiles/BlackjackBot.dir
-/home/asepulcri/Documents/BlackjackBot/CMakeFiles/BlackjackBotApp.dir
-/home/asepulcri/Documents/BlackjackBot/CMakeFiles/edit_cache.dir
-/home/asepulcri/Documents/BlackjackBot/CMakeFiles/rebuild_cache.dir
