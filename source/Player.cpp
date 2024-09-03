@@ -12,7 +12,7 @@ Player::Player() {
     addNewHand();
 }
 
-void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card, HighLowStrategy* p_hiLo) {
+void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card, std::unique_ptr<HighLowStrategy> p_hiLo) {
     int cardValue = p_card->getRank();
 
     p_hiLo->updateRunningCount(static_cast<Rank> (cardValue));
@@ -50,7 +50,7 @@ void Player::splitHand(int p_hand) {
     m_hand[p_hand].pop_back();
 }
 
-int Player::betHand(HighLowStrategy* p_hiLo, int p_minimumBet) {
+int Player::betHand(std::unique_ptr<HighLowStrategy> p_hiLo, int p_minimumBet) {
     int trueCount = std::round(p_hiLo->getTrueCount());
     
     if(trueCount < 0)
@@ -193,7 +193,7 @@ Decisions Dealer::makeDecision() {
     return stand;
 };
 
-void Dealer::drawCard(std::unique_ptr<Card> p_card, HighLowStrategy* p_hiLo) {
+void Dealer::drawCard(std::unique_ptr<Card> p_card, std::unique_ptr<HighLowStrategy> p_hiLo) {
     int cardValue = p_card->getRank();
 
     std::cout << "Dealer drew " << p_card->getRank() << " of " << p_card->getSuit();
