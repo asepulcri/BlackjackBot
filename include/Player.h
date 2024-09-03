@@ -3,6 +3,7 @@
 //
 
 #include "Card.h"
+#include "HighLowStrategy.h"
 #include "Shoe.h"
 #include <vector>
 #include <memory>
@@ -22,24 +23,28 @@ class Player {
 	private:
 		int m_lastHandIdx;
 		int m_wallet;
+		int m_bet;
 		std::vector<int> m_handValue;
 		std::vector<bool> m_softHand;
 		std::vector<int> m_aces;
-		std::vector<int> m_bets;
 		std::vector<std::vector<std::unique_ptr<Card>>> m_hand;
+		std::vector<int> m_betSpread;
 
 	public:
 		Player();
 
 		// Actions
-		void drawCard(int p_hand, std::unique_ptr<Card> p_card);
+		void drawCard(int p_hand, std::unique_ptr<Card> p_card, std::unique_ptr<HighLowStrategy> p_hiLo);
 		void addNewHand();
 		void splitHand(int p_hand);
-		void betHand(int p_hand, int p_bet);
+		int betHand(std::unique_ptr<HighLowStrategy> p_hiLo, int p_minimumBet);
 		void resetHand();
+		void updateWallet(bool p_win);
 		
 		// Getters
 		int getHandValue(int p_hand);
+		int getTrueCount(std::unique_ptr<HighLowStrategy> p_hiLo);
+		int getLastHandIdx();
 		
 		// Basic strategy
 		Decisions makeDecision(int p_hand, Rank p_dealerUpCard);
@@ -60,7 +65,7 @@ class Dealer {
 		Dealer ();
 
 		// Actions
-		void drawCard(std::unique_ptr<Card> p_card);
+		void drawCard(std::unique_ptr<Card> p_card, std::unique_ptr<HighLowStrategy> p_hiLo);
 		
 		// Getters
 		int getHandValue();

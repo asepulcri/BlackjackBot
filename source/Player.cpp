@@ -7,12 +7,15 @@ Player::Player() {
     m_aces = {0};
     m_handValue = {0};
     m_softHand = {false};
-    m_wallet = 0;
+    m_wallet = 100;
+    m_betSpread = {1, 2, 4, 7, 8, 10, 12};
     addNewHand();
 }
 
-void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
+void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card, HighLowStrategy* p_hiLo) {
     int cardValue = p_card->getRank();
+
+    p_hiLo->updateRunningCount(static_cast<Rank> (cardValue));
 	
     if(cardValue >= 10)
         cardValue = 10;
@@ -31,7 +34,7 @@ void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     }
 
     m_hand[p_hand].push_back(std::move(p_card));
-    
+
     return;
 };
 
@@ -47,13 +50,42 @@ void Player::splitHand(int p_hand) {
     m_hand[p_hand].pop_back();
 }
 
-void Player::betHand(int p_hand, int p_bet) {
-    m_bets[p_hand] += p_bet;
-    m_wallet -= p_bet;
+int Player::betHand(HighLowStrategy* p_hiLo, int p_minimumBet) {
+    int trueCount = std::round(p_hiLo->getTrueCount());
+    
+    if(trueCount < 0)
+        m_bet += p_minimumBet;
+
+    if(trueCount > 6)
+        m_bet += p_minimumBet * m_betSpread.back();
+
+    else
+        m_bet += p_minimumBet * m_betSpread[trueCount];
+
+    return m_bet;
 }
 
 void Player::resetHand() {
 
+}
+
+void Player::updateWallet(bool p_win) {
+    if(p_win){
+        m_wallet += m_bet * 2;
+    }
+
+    else
+        m_wallet -= m_bet;
+
+    m_bet = 0;
+}
+
+int Player::getHandValue(int p_hand) {
+    return m_handValue[p_hand];
+}
+
+int Player::getLastHandIdx() {
+    return m_lastHandIdx;
 }
 
 Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
@@ -161,8 +193,12 @@ Decisions Dealer::makeDecision() {
     return stand;
 };
 
-void Dealer::drawCard(std::unique_ptr<Card> p_card) {
+void Dealer::drawCard(std::unique_ptr<Card> p_card, HighLowStrategy* p_hiLo) {
     int cardValue = p_card->getRank();
+
+    std::cout << "Dealer drew " << p_card->getRank() << " of " << p_card->getSuit();
+
+    p_hiLo->updateRunningCount(static_cast<Rank> (cardValue));
 
     if(m_handValue = 0) {
         m_upCardRank = static_cast<Rank> (cardValue);

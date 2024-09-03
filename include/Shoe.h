@@ -21,4 +21,5 @@ public:
     void shuffleShoe();
     std::unique_ptr<Card> drawCard();
 
+    int getDecksRemaining();
 };
