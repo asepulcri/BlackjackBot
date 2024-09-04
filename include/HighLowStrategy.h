@@ -13,5 +13,6 @@ class HighLowStrategy {
 
         void updateRunningCount(Rank p_rank);
         void updateTrueCount(Shoe p_shoe);
+        int getRunningCount();
         int getTrueCount();
 };

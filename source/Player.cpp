@@ -2,6 +2,7 @@
 
 // Player base class
 
+// Constructor
 Player::Player() {
     m_lastHandIdx = 0;
     m_aces = {0};
@@ -12,10 +13,11 @@ Player::Player() {
     addNewHand();
 }
 
-void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card, std::unique_ptr<HighLowStrategy> p_hiLo) {
+// Basic actions
+void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
-    p_hiLo->updateRunningCount(static_cast<Rank> (cardValue));
+    m_hiLo.updateRunningCount(static_cast<Rank> (cardValue));
 	
     if(cardValue >= 10)
         cardValue = 10;
@@ -50,8 +52,10 @@ void Player::splitHand(int p_hand) {
     m_hand[p_hand].pop_back();
 }
 
-int Player::betHand(std::unique_ptr<HighLowStrategy> p_hiLo, int p_minimumBet) {
-    int trueCount = std::round(p_hiLo->getTrueCount());
+int Player::betHand(int p_minimumBet) {
+    int trueCount = m_hiLo.getTrueCount();
+
+    std::cout << "Runnning count is " << m_hiLo.getRunningCount() << "\n";
     
     if(trueCount < 0)
         m_bet += p_minimumBet;
@@ -65,19 +69,33 @@ int Player::betHand(std::unique_ptr<HighLowStrategy> p_hiLo, int p_minimumBet) {
     return m_bet;
 }
 
-void Player::resetHand() {
-
-}
-
-void Player::updateWallet(bool p_win) {
-    if(p_win){
+void Player::updateWallet(Outcomes p_outcome) {
+    if(win) {
         m_wallet += m_bet * 2;
     }
 
-    else
+    if(lose) {
         m_wallet -= m_bet;
+    }
 
     m_bet = 0;
+}
+
+void Player::updateRunningCountFromDealer(std::vector<std::unique_ptr<Card>> p_dealerHand) {
+    std::vector<std::unique_ptr<Card>> dealerHand = std::move(p_dealerHand);
+
+    for (auto& card: p_dealerHand) {
+        Rank cardRank = card->getRank();
+        m_hiLo.updateRunningCount(cardRank);
+    }
+}
+
+void Player::updateTrueCount(Shoe p_shoe) {
+    m_hiLo.updateTrueCount(p_shoe);
+}
+
+// Reset hand
+void Player::resetHand() {
 }
 
 int Player::getHandValue(int p_hand) {
@@ -184,21 +202,19 @@ Decisions Player::pairSplittingDecisions(int p_hand, Rank p_dealerUpCard) {
 }
 
 Dealer::Dealer() {
-};
+}
 
 Decisions Dealer::makeDecision() {
     if(m_handValue < 17)
         return hit;
 
     return stand;
-};
+}
 
-void Dealer::drawCard(std::unique_ptr<Card> p_card, std::unique_ptr<HighLowStrategy> p_hiLo) {
+void Dealer::drawCard(std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
     std::cout << "Dealer drew " << p_card->getRank() << " of " << p_card->getSuit();
-
-    p_hiLo->updateRunningCount(static_cast<Rank> (cardValue));
 
     if(m_handValue = 0) {
         m_upCardRank = static_cast<Rank> (cardValue);
@@ -223,7 +239,7 @@ void Dealer::drawCard(std::unique_ptr<Card> p_card, std::unique_ptr<HighLowStrat
     m_hand.push_back(std::move(p_card));
     
     return;
-};
+}
 
 int Dealer::getHandValue() {
     return m_handValue;
@@ -231,4 +247,8 @@ int Dealer::getHandValue() {
 
 Rank Dealer::getUpCardRank() {
     return m_upCardRank;
+}
+
+std::vector<std::unique_ptr<Card>> Dealer::getHand() {
+    return std::move(m_hand);
 }

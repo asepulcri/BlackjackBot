@@ -11,15 +11,15 @@
 #pragma once
 
 class Shoe {
-private:
-    int m_size;
-    std::vector<std::unique_ptr<Card>> m_currentShoe;
+    private:
+        int m_size;
+        std::vector<std::unique_ptr<Card>> m_currentShoe;
 
-public:
-    Shoe(int shoeSize);
+    public:
+        Shoe(int shoeSize);
 
-    void shuffleShoe();
-    std::unique_ptr<Card> drawCard();
+        void shuffleShoe();
+        std::unique_ptr<Card> drawCard();
 
-    int getDecksRemaining();
+        int getDecksRemaining();
 };

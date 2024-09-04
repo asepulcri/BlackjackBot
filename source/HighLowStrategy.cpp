@@ -22,6 +22,10 @@ void HighLowStrategy::updateTrueCount(Shoe p_shoe) {
     return;
 }
 
+int HighLowStrategy::getRunningCount() {
+    return m_runningCount;
+}
+
 int HighLowStrategy::getTrueCount() {
     return m_trueCount;
 }
