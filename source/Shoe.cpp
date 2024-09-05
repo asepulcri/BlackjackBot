@@ -23,3 +23,7 @@ std::unique_ptr<Card> Shoe::drawCard() {
     m_currentShoe.pop_back();
     return card;
 };
+
+int Shoe::getDecksRemaining() {
+    return (m_currentShoe.size() / 52);
+}

@@ -8,11 +8,15 @@ Player::Player() {
     m_handValue = {0};
     m_softHand = {false};
     m_wallet = 0;
+    m_bet = 0;
+    m_betSpread = {1, 2, 4, 7, 8, 10, 12};
     addNewHand();
 }
 
 void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
+
+    m_hiLo.updateRunningCount(static_cast<Rank> (cardValue));
 	
     if(cardValue >= 10)
         cardValue = 10;
@@ -47,13 +51,55 @@ void Player::splitHand(int p_hand) {
     m_hand[p_hand].pop_back();
 }
 
-void Player::betHand(int p_hand, int p_bet) {
-    m_bets[p_hand] += p_bet;
-    m_wallet -= p_bet;
+void Player::betHand(int p_minimumBet) {
+    int trueCount = m_hiLo.getTrueCount();
+
+    if(trueCount < 0) {
+        m_bet += p_minimumBet;
+    }
+
+    if(trueCount > 6) {
+        m_bet += p_minimumBet * m_betSpread.back();
+    }
+
+    else {
+        m_bet += p_minimumBet * m_betSpread[trueCount];
+    }
 }
 
-void Player::resetHand() {
+void Player::updateWallet(Outcomes p_outcome) {
+    if(win) {
+        m_wallet += 2 * m_bet;
+    }
 
+    if(lose) {
+        m_wallet -= m_bet;
+    }
+
+    if(push) {
+        ;
+    }
+
+    m_bet = 0;
+
+    return;
+}
+
+void Player::updateTrueCount(int p_decksRemaining) {
+    m_hiLo.updateTrueCount(p_decksRemaining);
+    return;
+}
+
+int Player::getHandValue(int p_hand) {
+    return m_handValue[p_hand];
+}
+
+int Player::getLastHandIdx() {
+    return m_lastHandIdx;
+}
+
+int Player::getBet() {
+    return m_bet;
 }
 
 Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
