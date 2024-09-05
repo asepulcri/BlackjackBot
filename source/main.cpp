@@ -34,13 +34,15 @@ int main() {
 			
 			// Player plays turn
 			while(player1Decision != stand) {
-				if(player1Decision = hit)
+				if(player1Decision == hit)
 					player1.drawCard(i, gameShoe.drawCard());
 
-				if(player1Decision = split)
+				if(player1Decision == split) {
 					player1.splitHand(i);
 					player1.drawCard(i, gameShoe.drawCard());
 					player1.betHand(10);
+				}
+			player1Decision = player1.makeDecision(i, dealer1.getUpCardRank());
 			}
 
 			if(player1.getHandValue(i) > 21){
@@ -54,8 +56,9 @@ int main() {
 		dealer1.drawCard(gameShoe.drawCard());
 		Decisions dealer1Decision = dealer1.makeDecision();
 		while(dealer1Decision != stand) {
-			if(dealer1Decision = hit)
+			if(dealer1Decision == hit)
 				dealer1.drawCard(gameShoe.drawCard());
+			dealer1Decision = dealer1.makeDecision();
 		}
 
 		if(dealer1.getHandValue() > 21) {
@@ -69,18 +72,22 @@ int main() {
 				player1.updateWallet(win);
 			}
 
-			if(player1.getHandValue(i) < dealer1.getHandValue()) {
+			else if(player1.getHandValue(i) < dealer1.getHandValue()) {
 				std::cout << "Player loses hand " << i << "\n";
 				player1.updateWallet(lose);
 			}
 
-			else {
+			else if(player1.getHandValue(i) == dealer1.getHandValue()){
 				std::cout << "Hand is tied" << "\n";
 				player1.updateWallet(push);
 			}
 		}
 		
 	}
+
+	int asd;
+
+	std::cin >> asd;
 
 	return 0;
 }

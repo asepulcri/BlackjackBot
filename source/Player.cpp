@@ -7,7 +7,7 @@ Player::Player() {
     m_aces = {0};
     m_handValue = {0};
     m_softHand = {false};
-    m_wallet = 0;
+    m_wallet = 100;
     m_bet = 0;
     m_betSpread = {1, 2, 4, 7, 8, 10, 12};
     addNewHand();
@@ -15,6 +15,8 @@ Player::Player() {
 
 void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
+
+    std::cout << "Player draws " << std::map<p_card->getRank(), Rank> << " of " << std::map<p_card->getSuit(),><< "\n";
 
     m_hiLo.updateRunningCount(static_cast<Rank> (cardValue));
 	
@@ -103,25 +105,30 @@ int Player::getBet() {
 }
 
 Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
+    Decisions playerDecision;
     if(m_handValue[p_hand] > 21)
-        return stand;
+        playerDecision = stand;
 
     if(m_handValue[p_hand] == 21)
-        return stand;
+        playerDecision = stand;
 
     if(m_hand[p_hand][0]->getRank() == m_hand[p_hand][1]->getRank() && m_hand.size() < 4) {
         Decisions splitDecision = pairSplittingDecisions(p_hand, p_dealerUpCard);
 
         if(splitDecision == split)
-            return split;
+            playerDecision = split;
         else
-            return softTotalsDecisions(p_hand, p_dealerUpCard);
+            playerDecision = softTotalsDecisions(p_hand, p_dealerUpCard);
     }
 
     if(m_softHand[p_hand])
-        return softTotalsDecisions(p_hand, p_dealerUpCard);
+        playerDecision = softTotalsDecisions(p_hand, p_dealerUpCard);
 
-    return hardTotalsDecisions(p_hand, p_dealerUpCard);
+    playerDecision = hardTotalsDecisions(p_hand, p_dealerUpCard);
+
+    std::cout << static_cast<Decisions> (playerDecision) << "\n";
+
+    return playerDecision;
 };
 
 Decisions Player::hardTotalsDecisions(int p_hand, Rank p_dealerUpCard) {
@@ -155,13 +162,13 @@ Decisions Player::hardTotalsDecisions(int p_hand, Rank p_dealerUpCard) {
 Decisions Player::softTotalsDecisions(int p_hand, Rank p_dealerUpCard) {
 
     int arr[8][10] = {
-        {0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
-        {0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
-        {0, 0, 2, 2, 2, 0, 0, 0, 0, 0},
-        {0, 0, 2, 2, 2, 0, 0, 0, 0, 0},
-        {0, 2, 2, 2, 2, 0, 0, 0, 0, 0},
-        {2, 2, 2, 2, 2, 1, 1, 0, 0, 0},
-        {1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
+        {0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+        {0, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+        {1, 1, 1, 1, 0, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
     int totalIndex = m_handValue[p_hand] - int(13);
@@ -198,19 +205,30 @@ Decisions Player::pairSplittingDecisions(int p_hand, Rank p_dealerUpCard) {
 }
 
 Dealer::Dealer() {
+    m_handValue = 0;
+    m_softHand = false;
+    m_aces = 0;
 };
 
 Decisions Dealer::makeDecision() {
-    if(m_handValue < 17)
-        return hit;
+    Decisions dealerDecision;
 
-    return stand;
+    if(m_handValue < 17)
+        dealerDecision = hit;
+
+    dealerDecision = stand;
+
+    std::cout << static_cast<Decisions> (dealerDecision);
+
+    return dealerDecision;
 };
 
 void Dealer::drawCard(std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
-    if(m_handValue = 0) {
+    std::cout << "Dealer draws " << std::map<Rank, > (p_card->getRank()) << " of " << static_cast<Suit> (p_card->getSuit()) << "\n";
+
+    if(m_hand.empty()) {
         m_upCardRank = static_cast<Rank> (cardValue);
     }
 	
