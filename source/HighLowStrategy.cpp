@@ -15,10 +15,8 @@ void HighLowStrategy::updateRunningCount(Rank p_rank) {
     return;
 }
 
-void HighLowStrategy::updateTrueCount(Shoe p_shoe) {
-    int decksRemaining = p_shoe.getDecksRemaining();
-    m_trueCount = std::round(m_runningCount / decksRemaining);
-
+void HighLowStrategy::updateTrueCount(int p_decksRemaining) {
+    m_trueCount = std::round(m_runningCount / p_decksRemaining);
     return;
 }
 

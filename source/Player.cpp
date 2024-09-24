@@ -9,6 +9,7 @@ Player::Player() {
     m_handValue = {0};
     m_softHand = {false};
     m_wallet = 100;
+    m_bet = 0;
     m_betSpread = {1, 2, 4, 7, 8, 10, 12};
     addNewHand();
 }
@@ -16,6 +17,8 @@ Player::Player() {
 // Basic actions
 void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
+
+    std::cout << "Player draws " << rankEnumToString(p_card->getRank()) << " of " << suitEnumToString(p_card->getSuit()) << "\n";
 
     m_hiLo.updateRunningCount(static_cast<Rank> (cardValue));
 	
@@ -52,50 +55,54 @@ void Player::splitHand(int p_hand) {
     m_hand[p_hand].pop_back();
 }
 
-int Player::betHand(int p_minimumBet) {
+void Player::betHand(int p_minimumBet) {
     int trueCount = m_hiLo.getTrueCount();
 
-    std::cout << "Runnning count is " << m_hiLo.getRunningCount() << "\n";
-    
-    if(trueCount < 0)
+    if(trueCount < 0) {
         m_bet += p_minimumBet;
+    }
 
-    if(trueCount > 6)
+    if(trueCount > 6) {
         m_bet += p_minimumBet * m_betSpread.back();
+    }
 
-    else
+    else {
         m_bet += p_minimumBet * m_betSpread[trueCount];
-
-    return m_bet;
+    }
 }
 
 void Player::updateWallet(Outcomes p_outcome) {
-    if(win) {
-        m_wallet += m_bet * 2;
-    }
+    switch(p_outcome) {
+        case win:
+            m_wallet += 2 * m_bet;
+            break;
+        
+        case lose:
+            m_wallet -= m_bet;
+            break;
 
-    if(lose) {
-        m_wallet -= m_bet;
+        case push:
+            break;
     }
 
     m_bet = 0;
+
+    return;
 }
 
-void Player::updateRunningCountFromDealer(std::vector<std::unique_ptr<Card>> p_dealerHand) {
-    std::vector<std::unique_ptr<Card>> dealerHand = std::move(p_dealerHand);
-
-    for (auto& card: p_dealerHand) {
-        Rank cardRank = card->getRank();
-        m_hiLo.updateRunningCount(cardRank);
-    }
+void Player::updateTrueCount(int p_decksRemaining) {
+    m_hiLo.updateTrueCount(p_decksRemaining);
+    return;
 }
 
-void Player::updateTrueCount(Shoe p_shoe) {
-    m_hiLo.updateTrueCount(p_shoe);
-}
-
-// Reset hand
-void Player::resetHand() {
+void Player::resetHands() {
+    m_hand.clear();
+    m_lastHandIdx = 0;
+    m_aces = {0};
+    m_handValue = {0};
+    m_softHand = {false};
+    m_bet = 0;
+    addNewHand();
 }
 
 int Player::getHandValue(int p_hand) {
@@ -106,26 +113,35 @@ int Player::getLastHandIdx() {
     return m_lastHandIdx;
 }
 
+int Player::getBet() {
+    return m_bet;
+}
+
 Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
+    Decisions playerDecision;
     if(m_handValue[p_hand] > 21)
-        return stand;
+        playerDecision = stand;
 
     if(m_handValue[p_hand] == 21)
-        return stand;
+        playerDecision = stand;
 
     if(m_hand[p_hand][0]->getRank() == m_hand[p_hand][1]->getRank() && m_hand.size() < 4) {
         Decisions splitDecision = pairSplittingDecisions(p_hand, p_dealerUpCard);
 
         if(splitDecision == split)
-            return split;
+            playerDecision = split;
         else
-            return softTotalsDecisions(p_hand, p_dealerUpCard);
+            playerDecision = softTotalsDecisions(p_hand, p_dealerUpCard);
     }
 
     if(m_softHand[p_hand])
-        return softTotalsDecisions(p_hand, p_dealerUpCard);
+        playerDecision = softTotalsDecisions(p_hand, p_dealerUpCard);
 
-    return hardTotalsDecisions(p_hand, p_dealerUpCard);
+    playerDecision = hardTotalsDecisions(p_hand, p_dealerUpCard);
+
+    std::cout << decisionsEnumToString(playerDecision) << "\n";
+
+    return playerDecision;
 };
 
 Decisions Player::hardTotalsDecisions(int p_hand, Rank p_dealerUpCard) {
@@ -159,13 +175,13 @@ Decisions Player::hardTotalsDecisions(int p_hand, Rank p_dealerUpCard) {
 Decisions Player::softTotalsDecisions(int p_hand, Rank p_dealerUpCard) {
 
     int arr[8][10] = {
-        {0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
-        {0, 0, 0, 2, 2, 0, 0, 0, 0, 0},
-        {0, 0, 2, 2, 2, 0, 0, 0, 0, 0},
-        {0, 0, 2, 2, 2, 0, 0, 0, 0, 0},
-        {0, 2, 2, 2, 2, 0, 0, 0, 0, 0},
-        {2, 2, 2, 2, 2, 1, 1, 0, 0, 0},
-        {1, 1, 1, 1, 2, 1, 1, 1, 1, 1},
+        {0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 1, 1, 1, 0, 0, 0, 0, 0},
+        {0, 1, 1, 1, 1, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+        {1, 1, 1, 1, 0, 1, 1, 1, 1, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
     int totalIndex = m_handValue[p_hand] - int(13);
@@ -202,21 +218,30 @@ Decisions Player::pairSplittingDecisions(int p_hand, Rank p_dealerUpCard) {
 }
 
 Dealer::Dealer() {
-}
+    m_handValue = 0;
+    m_softHand = false;
+    m_aces = 0;
+};
 
 Decisions Dealer::makeDecision() {
-    if(m_handValue < 17)
-        return hit;
+    Decisions dealerDecision;
 
-    return stand;
-}
+    if(m_handValue < 17)
+        dealerDecision = hit;
+
+    dealerDecision = stand;
+
+    std::cout << decisionsEnumToString(dealerDecision) << "\n";
+
+    return dealerDecision;
+};
 
 void Dealer::drawCard(std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
-    std::cout << "Dealer drew " << p_card->getRank() << " of " << p_card->getSuit();
+    std::cout << "Dealer draws " << rankEnumToString(p_card->getRank()) << " of " << suitEnumToString(p_card->getSuit()) << "\n";
 
-    if(m_handValue = 0) {
+    if(m_hand.empty()) {
         m_upCardRank = static_cast<Rank> (cardValue);
     }
 	
@@ -239,6 +264,13 @@ void Dealer::drawCard(std::unique_ptr<Card> p_card) {
     m_hand.push_back(std::move(p_card));
     
     return;
+};
+
+void Dealer::resetHands() {
+    m_hand.clear();
+    m_handValue = 0;
+    m_softHand = false;
+    m_aces = 0;
 }
 
 int Dealer::getHandValue() {

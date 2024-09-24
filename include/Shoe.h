@@ -3,6 +3,7 @@
 //
 
 #include "Card.h"
+#include "EnumNames.h"
 #include <vector>
 #include <algorithm>
 #include <random>
@@ -21,5 +22,5 @@ class Shoe {
         void shuffleShoe();
         std::unique_ptr<Card> drawCard();
 
-        int getDecksRemaining();
+    int getDecksRemaining();
 };

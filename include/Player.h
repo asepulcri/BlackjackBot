@@ -3,7 +3,9 @@
 //
 
 #include "Card.h"
+#include "EnumNames.h"
 #include "HighLowStrategy.h"
+#include "PrintStrings.h"
 #include "Shoe.h"
 #include <vector>
 #include <memory>
@@ -11,23 +13,10 @@
 
 #pragma once
 
-enum Decisions {
-	hit,
-	stand,
-	doubledown,
-	split,
-	surrender
-};
-
-enum Outcomes {
-	lose,
-	push,
-	win
-};
-
 class Player {
 	private:
 		int m_lastHandIdx;
+		int m_bet;
 		int m_wallet;
 		int m_bet;
 		HighLowStrategy m_hiLo;
@@ -37,6 +26,8 @@ class Player {
 		std::vector<std::vector<std::unique_ptr<Card>>> m_hand;
 		std::vector<int> m_betSpread;
 
+		HighLowStrategy m_hiLo;
+
 	public:
 		Player();
 
@@ -44,18 +35,15 @@ class Player {
 		void drawCard(int p_hand, std::unique_ptr<Card> p_card);
 		void addNewHand();
 		void splitHand(int p_hand);
-		int betHand(int p_minimumBet);
+		void betHand(int p_minimumBet);
 		void updateWallet(Outcomes p_outcome);
-		void updateRunningCountFromDealer(std::vector<std::unique_ptr<Card>> p_dealerHand);
-		void updateTrueCount(Shoe p_shoe);
-		
-		// Reset hand
-		void resetHand();
+		void updateTrueCount(int p_decksRemaining);
+		void resetHands();
 		
 		// Getters
 		int getHandValue(int p_hand);
-		int getTrueCount();
 		int getLastHandIdx();
+		int getBet();
 		
 		// Basic strategy
 		Decisions makeDecision(int p_hand, Rank p_dealerUpCard);
@@ -77,6 +65,7 @@ class Dealer {
 
 		// Actions
 		void drawCard(std::unique_ptr<Card> p_card);
+		void resetHands();
 		
 		// Getters
 		int getHandValue();
