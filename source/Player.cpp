@@ -16,7 +16,7 @@ Player::Player() {
 void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
-    std::cout << "Player draws " << std::map<p_card->getRank(), Rank> << " of " << std::map<p_card->getSuit(),><< "\n";
+    std::cout << "Player draws " << rankEnumToString(p_card->getRank()) << " of " << suitEnumToString(p_card->getSuit()) << "\n";
 
     m_hiLo.updateRunningCount(static_cast<Rank> (cardValue));
 	
@@ -70,16 +70,17 @@ void Player::betHand(int p_minimumBet) {
 }
 
 void Player::updateWallet(Outcomes p_outcome) {
-    if(win) {
-        m_wallet += 2 * m_bet;
-    }
+    switch(p_outcome) {
+        case win:
+            m_wallet += 2 * m_bet;
+            break;
+        
+        case lose:
+            m_wallet -= m_bet;
+            break;
 
-    if(lose) {
-        m_wallet -= m_bet;
-    }
-
-    if(push) {
-        ;
+        case push:
+            break;
     }
 
     m_bet = 0;
@@ -90,6 +91,16 @@ void Player::updateWallet(Outcomes p_outcome) {
 void Player::updateTrueCount(int p_decksRemaining) {
     m_hiLo.updateTrueCount(p_decksRemaining);
     return;
+}
+
+void Player::resetHands() {
+    m_hand.clear();
+    m_lastHandIdx = 0;
+    m_aces = {0};
+    m_handValue = {0};
+    m_softHand = {false};
+    m_bet = 0;
+    addNewHand();
 }
 
 int Player::getHandValue(int p_hand) {
@@ -126,7 +137,7 @@ Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
 
     playerDecision = hardTotalsDecisions(p_hand, p_dealerUpCard);
 
-    std::cout << static_cast<Decisions> (playerDecision) << "\n";
+    std::cout << decisionsEnumToString(playerDecision) << "\n";
 
     return playerDecision;
 };
@@ -218,7 +229,7 @@ Decisions Dealer::makeDecision() {
 
     dealerDecision = stand;
 
-    std::cout << static_cast<Decisions> (dealerDecision);
+    std::cout << decisionsEnumToString(dealerDecision) << "\n";
 
     return dealerDecision;
 };
@@ -226,7 +237,7 @@ Decisions Dealer::makeDecision() {
 void Dealer::drawCard(std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
-    std::cout << "Dealer draws " << std::map<Rank, > (p_card->getRank()) << " of " << static_cast<Suit> (p_card->getSuit()) << "\n";
+    std::cout << "Dealer draws " << rankEnumToString(p_card->getRank()) << " of " << suitEnumToString(p_card->getSuit()) << "\n";
 
     if(m_hand.empty()) {
         m_upCardRank = static_cast<Rank> (cardValue);
@@ -252,6 +263,13 @@ void Dealer::drawCard(std::unique_ptr<Card> p_card) {
     
     return;
 };
+
+void Dealer::resetHands() {
+    m_hand.clear();
+    m_handValue = 0;
+    m_softHand = false;
+    m_aces = 0;
+}
 
 int Dealer::getHandValue() {
     return m_handValue;

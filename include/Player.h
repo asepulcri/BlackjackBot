@@ -3,28 +3,15 @@
 //
 
 #include "Card.h"
+#include "EnumNames.h"
 #include "HighLowStrategy.h"
+#include "PrintStrings.h"
 #include "Shoe.h"
 #include <vector>
 #include <memory>
 #include <iostream>
-#include <map>
 
 #pragma once
-
-enum Decisions {
-	hit,
-	stand,
-	doubledown,
-	split,
-	surrender
-};
-
-enum Outcomes {
-	lose,
-	win,
-	push
-};
 
 class Player {
 	private:
@@ -49,7 +36,7 @@ class Player {
 		void betHand(int p_minimumBet);
 		void updateWallet(Outcomes p_outcome);
 		void updateTrueCount(int p_decksRemaining);
-		void resetHand();
+		void resetHands();
 		
 		// Getters
 		int getHandValue(int p_hand);
@@ -76,6 +63,7 @@ class Dealer {
 
 		// Actions
 		void drawCard(std::unique_ptr<Card> p_card);
+		void resetHands();
 		
 		// Getters
 		int getHandValue();

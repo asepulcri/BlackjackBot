@@ -3,14 +3,19 @@ project(BlackjackBot)
 
 set(HeaderFiles
 	include/Card.h
+	include/EnumNames.h
+	include/Game.h
 	include/HighLowStrategy.h
 	include/Player.h
+	include/PrintStrings.h
 	include/Shoe.h)
 
 set(SourceFiles
 	source/Card.cpp
+	source/Game.cpp
 	source/HighLowStrategy.cpp
 	source/Player.cpp
+	source/PrintStrings.cpp
 	source/Shoe.cpp
 	source/main.cpp)
 

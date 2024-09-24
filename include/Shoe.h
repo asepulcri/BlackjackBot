@@ -3,6 +3,7 @@
 //
 
 #include "Card.h"
+#include "EnumNames.h"
 #include <vector>
 #include <algorithm>
 #include <random>

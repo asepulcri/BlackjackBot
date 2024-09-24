@@ -1,4 +1,5 @@
 #include "Card.h"
+#include "EnumNames.h"
 #include "Shoe.h"
 
 #pragma once
