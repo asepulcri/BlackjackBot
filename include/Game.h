@@ -6,10 +6,17 @@
 
 #pragma once
 
-class Game {
+class Game{
     private:
-        void resetHands(Player p_player, Dealer p_dealer, Outcomes p_playerOutcome);
+        std::unique_ptr<Player> m_player;
+	    std::unique_ptr<Dealer> m_dealer;
+	    std::unique_ptr<Shoe> m_shoe;
 
+        Outcomes m_playerOutcome;
+    
     public:
-        void playGame();
+        Game();
+
+        void playShoe();
+        void resetShoe();
 };

@@ -16,4 +16,6 @@ class HighLowStrategy {
         void updateTrueCount(int p_decksRemaining);
         int getRunningCount();
         int getTrueCount();
+
+        void resetCount();
 };

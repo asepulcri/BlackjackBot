@@ -2,19 +2,17 @@
 
 // Player base class
 
-// Constructor
 Player::Player() {
     m_lastHandIdx = 0;
     m_aces = {0};
     m_handValue = {0};
     m_softHand = {false};
-    m_wallet = 100;
+    m_wallet = 10000;
     m_bet = 0;
     m_betSpread = {1, 2, 4, 7, 8, 10, 12};
     addNewHand();
 }
 
-// Basic actions
 void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
@@ -39,7 +37,7 @@ void Player::drawCard(int p_hand, std::unique_ptr<Card> p_card) {
     }
 
     m_hand[p_hand].push_back(std::move(p_card));
-
+    
     return;
 };
 
@@ -103,6 +101,10 @@ void Player::resetHands() {
     m_softHand = {false};
     m_bet = 0;
     addNewHand();
+}
+
+void Player::resetCount() {
+    m_hiLo.resetCount();
 }
 
 int Player::getHandValue(int p_hand) {
@@ -229,7 +231,8 @@ Decisions Dealer::makeDecision() {
     if(m_handValue < 17)
         dealerDecision = hit;
 
-    dealerDecision = stand;
+    else
+        dealerDecision = stand;
 
     std::cout << decisionsEnumToString(dealerDecision) << "\n";
 
@@ -279,8 +282,4 @@ int Dealer::getHandValue() {
 
 Rank Dealer::getUpCardRank() {
     return m_upCardRank;
-}
-
-std::vector<std::unique_ptr<Card>> Dealer::getHand() {
-    return std::move(m_hand);
 }

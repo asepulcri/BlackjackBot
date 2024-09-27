@@ -1,99 +1,108 @@
 #include "Game.h"
 
-void Game::playGame() {
+Game::Game() {
+    m_player = std::make_unique<Player>();
+    m_dealer = std::make_unique<Dealer>();
+    m_shoe = std::make_unique<Shoe>(6);
 
-    Shoe gameShoe(6);
-    Player player1;
-    Dealer dealer1;
+    m_playerOutcome = undetermined;
+}
 
-    Outcomes player1Outcome(undetermined);
+void Game::playShoe() {
+    m_shoe->shuffleShoe();
 
-	while(gameShoe.getDecksRemaining() > 1.5){
+	while(m_shoe->getDecksRemaining() > 1.5){
+        
 		// Start gameplay loop
 		
 		// Dealer draws card
-		dealer1.drawCard(gameShoe.drawCard());
+		m_dealer->drawCard(m_shoe->drawCard());
 		
 		// Player game loop
-		for(int i = 0; i < player1.getLastHandIdx() + 1; i ++) {
+		for(int i = 0; i < m_player->getLastHandIdx() + 1; i ++) {
 			
 			// Player draws cards and decides what to do
-			player1.drawCard(i, gameShoe.drawCard());
-			player1.drawCard(i, gameShoe.drawCard());
-			Decisions player1Decision = player1.makeDecision(i, dealer1.getUpCardRank());
+			m_player->drawCard(i, m_shoe->drawCard());
+			m_player->drawCard(i, m_shoe->drawCard());
+			Decisions playerDecision = m_player->makeDecision(i, m_dealer->getUpCardRank());
 			
 			// Place bets
-			player1.updateTrueCount(gameShoe.getDecksRemaining());
-			player1.betHand(10);
+			m_player->updateTrueCount(m_shoe->getDecksRemaining());
+			m_player->betHand(10);
 			
 			// Player plays turn
-			while(player1Decision != stand) {
-				if(player1Decision == hit)
-					player1.drawCard(i, gameShoe.drawCard());
 
-				if(player1Decision == split) {
-					player1.splitHand(i);
-					player1.drawCard(i, gameShoe.drawCard());
-					player1.betHand(10);
+			while(playerDecision != stand) {
+				if(playerDecision == hit)
+					m_player->drawCard(i, m_shoe->drawCard());
+
+				if(playerDecision == split) {
+					m_player->splitHand(i);
+					m_player->drawCard(i, m_shoe->drawCard());
+					m_player->betHand(10);
 				}
-			player1Decision = player1.makeDecision(i, dealer1.getUpCardRank());
+
+                if(playerDecision == doubledown) {
+                    m_player->drawCard(i, m_shoe->drawCard());
+                    m_player->betHand(10);
+                    playerDecision = stand;
+                }
+
+                if(playerDecision != stand)
+			        playerDecision = m_player->makeDecision(i, m_dealer->getUpCardRank());
 			}
 
-			if(player1.getHandValue(i) > 21){
+			if(m_player->getHandValue(i) > 21){
 				std::cout << "Player busted" << "\n";
-				player1Outcome = lose;
+				m_playerOutcome = lose;
 			}
 
 		}
 
-        if(player1Outcome != lose) {
+        if(m_playerOutcome != lose) {
             // Dealer plays turn
-            dealer1.drawCard(gameShoe.drawCard());
-            Decisions dealer1Decision = dealer1.makeDecision();
+            m_dealer->drawCard(m_shoe->drawCard());
+            Decisions dealer1Decision = m_dealer->makeDecision();
             while(dealer1Decision != stand) {
                 if(dealer1Decision == hit)
-                    dealer1.drawCard(gameShoe.drawCard());
-                dealer1Decision = dealer1.makeDecision();
+                    m_dealer->drawCard(m_shoe->drawCard());
+                dealer1Decision = m_dealer->makeDecision();
             }
 
-            if(dealer1.getHandValue() > 21) {
+            if(m_dealer->getHandValue() > 21) {
                 std::cout << "Dealer busted" << "\n";
-                player1Outcome = win;
+                m_playerOutcome = win;
             }
 
-            for(int i = 0; i < player1.getLastHandIdx() + 1; i ++) {
-                if(player1.getHandValue(i) > dealer1.getHandValue()) {
+            for(int i = 0; i < m_player->getLastHandIdx() + 1; i ++) {
+                if(m_player->getHandValue(i) > m_dealer->getHandValue()) {
                     std::cout << "Player wins hand " << i << "\n";
-                    player1Outcome = win;
+                    m_playerOutcome = win;
                 }
 
-                else if(player1.getHandValue(i) < dealer1.getHandValue()) {
+                else if(m_player->getHandValue(i) < m_dealer->getHandValue()) {
                     std::cout << "Player loses hand " << i << "\n";
-                    player1Outcome = lose;
+                    m_playerOutcome = lose;
                 }
 
-                else if(player1.getHandValue(i) == dealer1.getHandValue()){
+                else if(m_player->getHandValue(i) == m_dealer->getHandValue()){
                     std::cout << "Hand is tied" << "\n";
-                    player1Outcome = push;
+                    m_playerOutcome = push;
                 }
 
             }       
         }
-        player1.updateWallet(player1Outcome);
+        m_player->updateWallet(m_playerOutcome);
 
-        // resetHands(player1, dealer1, player1Outcome);
-
-        player1Outcome = undetermined;
-        player1.resetHands();
-        dealer1.resetHands();
+        m_playerOutcome = undetermined;
+        m_player->resetHands();
+        m_dealer->resetHands();
 	}
 
     return;
 }
 
-void Game::resetHands(Player p_player, Dealer p_dealer, Outcomes p_playerOutcome) {
-    // p_playerOutcome = undetermined;
-    // p_player.resetHands();
-    // p_dealer.resetHands();
-    // return;
+void Game::resetShoe() {
+    m_player->resetCount();
+    m_shoe = std::make_unique<Shoe>(6);
 }

@@ -27,3 +27,8 @@ int HighLowStrategy::getRunningCount() {
 int HighLowStrategy::getTrueCount() {
     return m_trueCount;
 }
+
+void HighLowStrategy::resetCount() {
+    m_runningCount = 0;
+    m_trueCount = 0;
+}

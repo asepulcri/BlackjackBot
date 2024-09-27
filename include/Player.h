@@ -18,15 +18,12 @@ class Player {
 		int m_lastHandIdx;
 		int m_bet;
 		int m_wallet;
-		int m_bet;
 		HighLowStrategy m_hiLo;
 		std::vector<int> m_handValue;
 		std::vector<bool> m_softHand;
 		std::vector<int> m_aces;
 		std::vector<std::vector<std::unique_ptr<Card>>> m_hand;
 		std::vector<int> m_betSpread;
-
-		HighLowStrategy m_hiLo;
 
 	public:
 		Player();
@@ -39,6 +36,7 @@ class Player {
 		void updateWallet(Outcomes p_outcome);
 		void updateTrueCount(int p_decksRemaining);
 		void resetHands();
+		void resetCount();
 		
 		// Getters
 		int getHandValue(int p_hand);

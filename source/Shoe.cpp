@@ -25,5 +25,6 @@ std::unique_ptr<Card> Shoe::drawCard() {
 };
 
 int Shoe::getDecksRemaining() {
+    std::cout << m_currentShoe.size() / 52 << " decks remaining \n";
     return (m_currentShoe.size() / 52);
 }

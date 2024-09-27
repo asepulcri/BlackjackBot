@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <random>
 #include <memory>
+#include <iostream>
 
 #pragma once
 
@@ -22,5 +23,5 @@ class Shoe {
         void shuffleShoe();
         std::unique_ptr<Card> drawCard();
 
-    int getDecksRemaining();
+        int getDecksRemaining();
 };
