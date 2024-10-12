@@ -74,21 +74,24 @@ void Game::playShoe() {
                 m_playerOutcome = win;
             }
 
-            for(int i = 0; i < m_player->getLastHandIdx() + 1; i ++) {
-                if(m_player->getHandValue(i) > m_dealer->getHandValue()) {
-                    std::cout << "Player wins hand " << i << "\n";
-                    m_playerOutcome = win;
-                }
 
-                else if(m_player->getHandValue(i) < m_dealer->getHandValue()) {
-                    std::cout << "Player loses hand " << i << "\n";
-                    m_playerOutcome = lose;
-                }
+            if(m_playerOutcome != win) {
+                for(int i = 0; i < m_player->getLastHandIdx() + 1; i ++) {
+                    if(m_player->getHandValue(i) > m_dealer->getHandValue()) {
+                        std::cout << "Player wins hand " << i << "\n";
+                        m_playerOutcome = win;
+                    }
 
-                else if(m_player->getHandValue(i) == m_dealer->getHandValue()){
-                    std::cout << "Hand is tied" << "\n";
-                    m_playerOutcome = push;
-                }
+                    else if(m_player->getHandValue(i) < m_dealer->getHandValue()) {
+                        std::cout << "Player loses hand " << i << "\n";
+                        m_playerOutcome = lose;
+                    }
+
+                    else if(m_player->getHandValue(i) == m_dealer->getHandValue()){
+                        std::cout << "Hand is tied" << "\n";
+                        m_playerOutcome = push;
+                    }
+            }
 
             }       
         }
