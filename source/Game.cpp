@@ -4,11 +4,15 @@ Game::Game() {
     m_player = std::make_unique<Player>();
     m_dealer = std::make_unique<Dealer>();
     m_shoe = std::make_unique<Shoe>(6);
+    m_gameStats = std::make_unique<GameStats>();
 
     m_playerOutcome = undetermined;
 }
 
 void Game::playShoe() {
+
+    std::ofstream gameStats("stats.txt", std::ofstream::out | std::ofstream::app);
+
     m_shoe->shuffleShoe();
 
 	while(m_shoe->getDecksRemaining() > 1.5){
@@ -97,6 +101,8 @@ void Game::playShoe() {
         }
         m_player->updateWallet(m_playerOutcome);
 
+        m_gameStats->updateHandStats(m_player->getRunningCount(), m_player->getTrueCount(), m_player->getWalletAmount());
+
         m_playerOutcome = undetermined;
         m_player->resetHands();
         m_dealer->resetHands();
@@ -108,4 +114,9 @@ void Game::playShoe() {
 void Game::resetShoe() {
     m_player->resetCount();
     m_shoe = std::make_unique<Shoe>(6);
+}
+
+void Game::writeStatstoCSV() {
+    std::ofstream outFile("../stats.txt");
+    for (const auto &e : m_gameStats->m_walletHistory) outFile << e << "\n";
 }

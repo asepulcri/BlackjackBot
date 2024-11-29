@@ -119,6 +119,18 @@ int Player::getBet() {
     return m_bet;
 }
 
+int Player::getRunningCount() {
+    return m_hiLo.getRunningCount();
+}
+
+int Player::getTrueCount() {
+    return m_hiLo.getTrueCount();
+}
+
+int Player::getWalletAmount() {
+    return m_wallet;
+}
+
 Decisions Player::makeDecision(int p_hand, Rank p_dealerUpCard) {
     Decisions playerDecision;
     if(m_handValue[p_hand] > 21)

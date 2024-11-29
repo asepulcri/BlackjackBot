@@ -8,5 +8,7 @@ int main() {
 		newGame.resetShoe();
 	}
 
+	newGame.writeStatstoCSV();
+
 	return 0;
 }

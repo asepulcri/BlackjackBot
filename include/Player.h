@@ -42,6 +42,9 @@ class Player {
 		int getHandValue(int p_hand);
 		int getLastHandIdx();
 		int getBet();
+		int getRunningCount();
+		int getTrueCount();
+		int getWalletAmount();
 		
 		// Basic strategy
 		Decisions makeDecision(int p_hand, Rank p_dealerUpCard);
