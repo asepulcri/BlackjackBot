@@ -119,4 +119,5 @@ void Game::resetShoe() {
 void Game::writeStatstoCSV() {
     std::ofstream outFile("../stats.txt");
     for (const auto &e : m_gameStats->m_walletHistory) outFile << e << "\n";
+    outFile.close();
 }

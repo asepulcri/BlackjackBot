@@ -240,11 +240,7 @@ Dealer::Dealer() {
 Decisions Dealer::makeDecision() {
     Decisions dealerDecision;
 
-    if(m_handValue < 17)
-        dealerDecision = hit;
-
-    else
-        dealerDecision = stand;
+    dealerDecision = m_handValue < 17 ? hit : stand;
 
     std::cout << decisionsEnumToString(dealerDecision) << "\n";
 
