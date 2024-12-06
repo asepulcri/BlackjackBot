@@ -15,6 +15,8 @@ class Game{
 	    std::unique_ptr<Shoe> m_shoe;
         std::unique_ptr<GameStats> m_gameStats;
 
+        int m_minimumBet;
+
         Outcomes m_playerOutcome;
     
     public:

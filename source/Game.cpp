@@ -6,6 +6,8 @@ Game::Game() {
     m_shoe = std::make_unique<Shoe>(6);
     m_gameStats = std::make_unique<GameStats>();
 
+    m_minimumBet = 10;
+
     m_playerOutcome = undetermined;
 }
 
@@ -20,7 +22,10 @@ void Game::playShoe() {
 		// Start gameplay loop
 		
 		// Dealer draws card
-		m_dealer->drawCard(m_shoe->drawCard());
+		Rank dealerCardRank = m_dealer->drawCard(m_shoe->drawCard());
+
+        // Player updates running count
+        m_player->updateRunningCount(dealerCardRank);
 		
 		// Player game loop
 		for(int i = 0; i < m_player->getLastHandIdx() + 1; i ++) {
@@ -32,7 +37,7 @@ void Game::playShoe() {
 			
 			// Place bets
 			m_player->updateTrueCount(m_shoe->getDecksRemaining());
-			m_player->betHand(10);
+			m_player->betHand(m_minimumBet);
 			
 			// Player plays turn
 
@@ -43,12 +48,12 @@ void Game::playShoe() {
 				if(playerDecision == split) {
 					m_player->splitHand(i);
 					m_player->drawCard(i, m_shoe->drawCard());
-					m_player->betHand(10);
+					m_player->betHand(m_minimumBet);
 				}
 
                 if(playerDecision == doubledown) {
                     m_player->drawCard(i, m_shoe->drawCard());
-                    m_player->betHand(10);
+                    m_player->betHand(m_minimumBet);
                     playerDecision = stand;
                 }
 
@@ -65,11 +70,19 @@ void Game::playShoe() {
 
         if(m_playerOutcome != lose) {
             // Dealer plays turn
-            m_dealer->drawCard(m_shoe->drawCard());
+            dealerCardRank = m_dealer->drawCard(m_shoe->drawCard());
+
+            m_player->updateRunningCount(dealerCardRank);
+
             Decisions dealer1Decision = m_dealer->makeDecision();
+            
+            // Dealer makes decisions
             while(dealer1Decision != stand) {
-                if(dealer1Decision == hit)
-                    m_dealer->drawCard(m_shoe->drawCard());
+                if(dealer1Decision == hit) {
+                    dealerCardRank = m_dealer->drawCard(m_shoe->drawCard());
+                    m_player->updateRunningCount(dealerCardRank);
+                }
+                
                 dealer1Decision = m_dealer->makeDecision();
             }
 
@@ -78,7 +91,7 @@ void Game::playShoe() {
                 m_playerOutcome = win;
             }
 
-
+            // Check for win, lose or push
             if(m_playerOutcome != win) {
                 for(int i = 0; i < m_player->getLastHandIdx() + 1; i ++) {
                     if(m_player->getHandValue(i) > m_dealer->getHandValue()) {
@@ -99,13 +112,17 @@ void Game::playShoe() {
 
             }       
         }
+
+        // Update player chip count
         m_player->updateWallet(m_playerOutcome);
 
+        // Update hand stats
         m_gameStats->updateHandStats(m_player->getRunningCount(), m_player->getTrueCount(), m_player->getWalletAmount());
 
+        // Reset for next hand
         m_playerOutcome = undetermined;
         m_player->resetHands();
-        m_dealer->resetHands();
+        m_dealer->resetHand();
 	}
 
     return;

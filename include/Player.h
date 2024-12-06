@@ -34,6 +34,7 @@ class Player {
 		void splitHand(int p_hand);
 		void betHand(int p_minimumBet);
 		void updateWallet(Outcomes p_outcome);
+		void updateRunningCount(Rank p_rank);
 		void updateTrueCount(int p_decksRemaining);
 		void resetHands();
 		void resetCount();
@@ -65,8 +66,8 @@ class Dealer {
 		Dealer ();
 
 		// Actions
-		void drawCard(std::unique_ptr<Card> p_card);
-		void resetHands();
+		Rank drawCard(std::unique_ptr<Card> p_card);
+		void resetHand();
 		
 		// Getters
 		int getHandValue();

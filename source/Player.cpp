@@ -88,6 +88,11 @@ void Player::updateWallet(Outcomes p_outcome) {
     return;
 }
 
+void Player::updateRunningCount(Rank p_rank) {
+    m_hiLo.updateRunningCount(p_rank);
+    return;
+}
+
 void Player::updateTrueCount(int p_decksRemaining) {
     m_hiLo.updateTrueCount(p_decksRemaining);
     return;
@@ -247,7 +252,7 @@ Decisions Dealer::makeDecision() {
     return dealerDecision;
 };
 
-void Dealer::drawCard(std::unique_ptr<Card> p_card) {
+Rank Dealer::drawCard(std::unique_ptr<Card> p_card) {
     int cardValue = p_card->getRank();
 
     std::cout << "Dealer draws " << rankEnumToString(p_card->getRank()) << " of " << suitEnumToString(p_card->getSuit()) << "\n";
@@ -274,10 +279,10 @@ void Dealer::drawCard(std::unique_ptr<Card> p_card) {
 
     m_hand.push_back(std::move(p_card));
     
-    return;
+    return static_cast<Rank>(cardValue);
 };
 
-void Dealer::resetHands() {
+void Dealer::resetHand() {
     m_hand.clear();
     m_handValue = 0;
     m_softHand = false;
