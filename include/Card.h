@@ -17,6 +17,7 @@ private:
 public:
     Card(Suit cardSuit, Rank cardRank);
     
+    // Getters
     Suit getSuit();
     Rank getRank();
 };

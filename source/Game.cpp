@@ -129,11 +129,13 @@ void Game::playShoe() {
 }
 
 void Game::resetShoe() {
+    // Create new shoe and reset player count
     m_player->resetCount();
     m_shoe = std::make_unique<Shoe>(6);
 }
 
-void Game::writeStatstoCSV() {
+void Game::writeStatstoTXT() {
+    // Provide stat tracking
     std::ofstream outFile("../stats.txt");
     for (const auto &e : m_gameStats->m_walletHistory) outFile << e << "\n";
     outFile.close();

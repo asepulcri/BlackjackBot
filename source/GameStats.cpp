@@ -4,6 +4,7 @@ GameStats::GameStats() {
 };
 
 void GameStats::updateHandStats(int p_runningCount, int p_trueCount, int p_walletValue) {
+    // Update stat history after each hand
     m_handStats.runningCount = p_runningCount;
     m_handStats.trueCount = p_trueCount;
     m_handStats.walletValue = p_walletValue;

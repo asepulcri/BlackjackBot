@@ -22,8 +22,8 @@ class Game{
     public:
         Game();
 
+        // Actions
         void playShoe();
         void resetShoe();
-
-        void writeStatstoCSV();
+        void writeStatstoTXT();
 };

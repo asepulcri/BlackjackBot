@@ -6,16 +6,18 @@ HighLowStrategy::HighLowStrategy() {
 }
 
 void HighLowStrategy::updateRunningCount(Rank p_rank) {
-    if(p_rank >= 2 && p_rank < 7)
+    // Update running count based on drawn hand
+    if(p_rank >= 2 && p_rank < 7) // Cards 2-6 are +1
         m_runningCount += 1;
 
-    if(p_rank >= 10 || p_rank == ace)
+    if(p_rank >= 10 || p_rank == ace) // Face cards and aces are -1
         m_runningCount -= 1;
     
     return;
 }
 
 void HighLowStrategy::updateTrueCount(int p_decksRemaining) {
+    // Update true count based on decks remaining in the shoe
     m_trueCount = std::round(m_runningCount / p_decksRemaining);
     return;
 }

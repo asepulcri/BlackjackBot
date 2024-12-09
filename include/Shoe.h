@@ -20,6 +20,7 @@ class Shoe {
     public:
         Shoe(int shoeSize);
 
+        // Actions
         void shuffleShoe();
         std::unique_ptr<Card> drawCard();
 

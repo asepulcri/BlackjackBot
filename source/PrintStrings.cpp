@@ -1,5 +1,6 @@
 #include "PrintStrings.h"
 
+// Mappings of enums to strings for printing into console
 std::map<Decisions, std::string> decisionsToString = {{hit, 			"Hit"},
 													  {stand, 		    "Stand"},
 													  {doubledown, 		"Double down"},
@@ -29,6 +30,7 @@ std::map<Suit, std::string> suitToString = {{clubs,    "clubs"},
                                             {hearts,   "hearts"},
                                             {spades,   "spades"}};
 
+// Take enum as input and return string
 std::string suitEnumToString(Suit suit) { return suitToString[suit]; }
 
 std::string outcomesEnumToString(Outcomes outcome) { return outcomesToString[outcome]; }

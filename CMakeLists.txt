@@ -28,8 +28,7 @@ set(SourceFiles
 	source/Player.cpp
 	source/PrintStrings.cpp
 	source/Shoe.cpp
-	source/main.cpp
-	tests/tests.cpp)
+	source/main.cpp)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MOUDLE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 

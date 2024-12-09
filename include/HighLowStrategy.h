@@ -12,6 +12,7 @@ class HighLowStrategy {
     public:
         HighLowStrategy();
 
+        // Actions
         void updateRunningCount(Rank p_rank);
         void updateTrueCount(int p_decksRemaining);
         int getRunningCount();

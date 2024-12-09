@@ -15,5 +15,6 @@ class GameStats {
         std::vector<int> m_walletHistory;
         handStats m_handStats;
         
+        // Actions
         void updateHandStats(int p_runningCount, int p_trueCount, int p_walletValue);
 };
